@@ -160,7 +160,7 @@ function PrioritiesList() {
     <div className="mx-auto p-4 z-10">
       <h2 className="text-2xl font-bold mb-4 text-center">Priorities List</h2>
 
-      <div className='mb-4 flex items-end justify-between'>
+      <div className='mb-4 flex xs:flex-row flex-col gap-1 justify-between'>
         {/* Add priorities */}
         <ButtonWithIcon icon={addIcon} iconClass={'text-xl font-bold'} iconPosition="left" variant="primary" className='text-sm mt-0' 
           onClick={() => setShowAddEditPriorities(true)}>

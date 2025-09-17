@@ -67,18 +67,6 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
 
     const backdropRef = useRef(null);
 
-    const handleMouseDown = (e) => {
-      setTimeout(() => {
-        backdropRef.current.clickedOnBackdrop = e.target === backdropRef.current;
-      }, 0);
-    };
-
-    const handleMouseUp = (e) => {
-      if (backdropRef.current.clickedOnBackdrop && e.target === backdropRef.current) {
-        onClose(); 
-      }
-    };
-
     // Date Function
     const setDayStart = (dateString) => {
       if (!dateString) return null;
@@ -199,7 +187,7 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
           cleaned.keywords = singleTask.serialNo.toLowerCase() 
               ? Array.from(new Set([...newKeywords, singleTask.serialNo.toLowerCase()]))
               : newKeywords;
-          console.log("cleaned",cleaned);
+          console.log("updatePayload",cleaned);
           const response = await updateTaskFirebase(singleTask.id, cleaned);
 
           if (response.success) {
@@ -239,9 +227,19 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
         }        
     };
 
+    const handleBackdropClick = (e) => {
+      if (e.target === backdropRef.current) {
+        onClose();
+      }
+    };    
+
     return (
-      <div ref={backdropRef} className='fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-end cursor-pointer' onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
-        <div className='bg-white w-96 h-full flex flex-col p-4 cursor-auto' onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} >
+      <div ref={backdropRef} className='fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-end cursor-pointer' 
+        onClick={handleBackdropClick}
+      >
+        <div className='bg-white sm:w-96 w-full h-full flex flex-col p-4 cursor-auto' 
+          onClick={(e) => e.stopPropagation()} 
+        >
           <div className='flex justify-end mb-2'>
             <button onClick={onClose}><IoMdCloseCircle className='text-2xl'/></button>
           </div>
@@ -286,8 +284,8 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                         {...register("title", {
                             required: "Title is Required",
                             pattern: {
-                                value: /^[a-zA-Z0-9 _.-]{1,100}$/,
-                                message: "Title can only contain letters, numbers, spaces, -, _, and ."
+                                value: /^[a-zA-Z0-9 _.,()@#$%*+\-=]{1,100}$/,
+                                message: "Title can only contain letters, numbers, spaces, and allowed symbols (._,()-@#$%*+=)"
                             }
                         })}
                         error={errors.title && errors.title.message}
@@ -306,8 +304,8 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                         {...register("description", {
                             required: "Description is Required",
                             pattern: {
-                                value: /^[^{}\[\];]{1,1000}$/,
-                                message: "Description can only contain letters, numbers, spaces, -, _, and ."
+                                value: /^[a-zA-Z0-9 _.,()@#$%*+\-=]{1,100}$/,
+                                message: "Title can only contain letters, numbers, spaces, and allowed symbols (._,()-@#$%*+=)"
                             }
                         })}
                         error={errors.description && errors.description.message}
@@ -364,7 +362,7 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                 {/* Task Status Input End */}  
 
                 {/* Date Input Start */}
-                <div className='flex gap-2'>
+                <div className='flex sm:flex-row flex-col gap-2'>
                     <div className="w-full">
                       <DatePicker
                         label="Task Start Date"

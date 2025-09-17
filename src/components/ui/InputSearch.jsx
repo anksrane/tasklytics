@@ -6,6 +6,8 @@ const InputSearch = React.forwardRef(function InputSearch({
     type = 'text',
     name = '',
     className = '',
+    searchBtnClassName='',
+    clearBtnClassName='',
     placeholder = 'Please enter Text',     
     value = '',
     onChange,
@@ -18,7 +20,7 @@ const InputSearch = React.forwardRef(function InputSearch({
     const inputClass = `w-full pl-2 py-1 rounded-md text-sm focus:outline-none focus:border-transparent z-0 ${className}`;
     return (
         <div className="flex items-center border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                <input
+            <input
                 type={type}
                 className={inputClass}
                 name={name}
@@ -33,18 +35,18 @@ const InputSearch = React.forwardRef(function InputSearch({
                     }
                 }}                
                 {...props}
-                />
+            />
 
-                <button
+            <button
                 type="button"
                 onClick={onClear}
-                className={`p-1 text-gray-400 hover:text-gray-600 ${showClear && value.length>0 ? 'opacity-100 z-20 cursor-pointer': 'opacity-0 -z-20 cursor-auto'}`}
+                className={`p-1 text-gray-400 hover:text-gray-600 ${clearBtnClassName} ${showClear && value.length>0 ? 'opacity-100 z-20 cursor-pointer': 'opacity-0 -z-20 cursor-auto'}`}
                 >
                 <IoMdClose className="text-lg" />
-                </button>  
-                <button className='p-2 bg-black rounded-r-md border-none' onClick={()=>onSearch(value)}>
+            </button>  
+            <button className={`p-2 bg-black rounded-r-md border-0 ${searchBtnClassName}`} onClick={()=>onSearch(value)}>
                     <FaSearch className='text-gray-50 text-lg' />
-                </button>
+            </button>
         </div>
     )
 });

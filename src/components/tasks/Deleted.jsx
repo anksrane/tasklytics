@@ -1,14 +1,14 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react'
-import { ViewTask, ConfirmDeleteModal, RestoreTrashModal } from '../index.js'
-import { InputSearch, Loader } from '../index.js';
-import { IoMdAdd } from "react-icons/io";
-import { fetchAllDropdowns } from '../../firebase/dropdownService.js';
-import { getAllTaskFirebase } from '../../firebase/taskServices/getAllTasksWithFilter.js';
+import { ViewTask, ConfirmDeleteModal, RestoreTrashModal, InputSearch, Loader } from '../index.js'
 import { MdOutlineClear } from "react-icons/md";
 import { IoEyeSharp } from "react-icons/io5";
 import { GoTrash } from "react-icons/go";
 import { MdOutlineRestorePage } from "react-icons/md";
 import { useSelector } from 'react-redux';
+import { Timestamp } from "firebase/firestore";
+
+import { fetchAllDropdowns } from '../../firebase/dropdownService.js';
+import { getAllTaskFirebase } from '../../firebase/taskServices/getAllTasksWithFilter.js';
 
 import {
   useReactTable,
@@ -19,11 +19,33 @@ import {
   getSortedRowModel,
 } from '@tanstack/react-table';
 
+const formatDate = (val) => {
+  if (!val) return "-";
+  let dateObj;
+  if (val instanceof Timestamp) {
+    dateObj = val.toDate();
+  } else if (val?.seconds) {
+    dateObj = new Date(val.seconds * 1000);
+  } else if (val instanceof Date) {
+    dateObj = val;
+  } else {
+    return String(val);
+  }  
+  // Format as DD-MM-YYYY
+  const day = String(dateObj.getDate()).padStart(2, '0');
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const month = monthNames[dateObj.getMonth()]; // Months are 0-based
+  const year = dateObj.getFullYear();
+
+  return `${day}-${month}-${year}`;
+};
 
 function Deleted() {
     const {user}=useSelector((state)=>state.auth);
 
     const [tasksData, setTasksData] = useState([]);
+    const [totalTasks, setTotalTasks] = useState(0);
     const [loadingTasks, setLoadingTasks] = useState(true);
     const [loadingDropdowns, setLoadingDropdowns] = useState(true);
     const [showDeleteModal,setShowDeleteModal] = useState(false);
@@ -35,25 +57,14 @@ function Deleted() {
 
     const [sorting,setSorting]=useState([]);
     const [globalFilter,setGlobalFilter]=useState('');
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize] = useState(10);
-    const [cursors, setCursors] = useState([null]); 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize] = useState(5);
     const [searchText,setSearchText]=useState('');
     const [appliedSearchText, setAppliedSearchText] = useState('');
     const [hasMorePages, setHasMorePages] = useState(false);
-    const [filters, setFilters] = useState({
-      phase: '',
-      status: '',
-      priority: '',
-      trash: true
-    });
+    const [filters, setFilters] = useState({ phase: '', status: '', priority: '', trash: true });
 
-    const [dropdowns, setDropdowns] = useState({
-        taskPhases: [],
-        taskPriorities: [],
-        statuses: [],
-        clients:[]
-    });
+    const [dropdowns, setDropdowns] = useState({ taskPhases: [], taskPriorities: [], statuses: [], clients: [] });
 
     // Fetch all dropdown options
     useEffect(() => {
@@ -78,10 +89,7 @@ function Deleted() {
       setLoadingTasks(true);
 
       const sortBy = sorting[0]?.id || 'created_at';
-      const sortOrder = sorting[0]?.desc ? 'desc' : 'asc';
-
-      // Get the cursor for the targetPage (which means to start *after* this document)
-      const cursorForQuery = cursors[targetPage] || null      
+      const sortOrder = sorting[0]?.desc ? 'desc' : 'asc'; 
 
       const response = await getAllTaskFirebase(
         user,
@@ -90,7 +98,7 @@ function Deleted() {
         sortBy,
         sortOrder,
         pageSize,
-        cursorForQuery,
+        targetPage,
         dropdowns.taskPhases, 
         dropdowns.taskPriorities,
         dropdowns.statuses,
@@ -100,9 +108,8 @@ function Deleted() {
       if (response.success) {
         setTasksData(response.data);
         setHasMorePages(response.hasMore);
-        if (response.nextCursor && cursors.length === targetPage + 1) {
-          setCursors(prev => [...prev, response.nextCursor]);
-        }     
+        setTotalTasks(response.total);
+        setCurrentPage(response.currentPage);           
       } else {
         console.error("Failed to fetch tasks:", response.error);
         setTasksData([]); 
@@ -110,7 +117,7 @@ function Deleted() {
       }
 
       setLoadingTasks(false);
-    },[filters, sorting, appliedSearchText, pageSize, cursors, currentPage, dropdowns]);
+    },[user, filters, sorting, appliedSearchText, pageSize, currentPage, dropdowns]);
 
 
     useEffect(() => {
@@ -122,6 +129,18 @@ function Deleted() {
 
     const columnHelper=createColumnHelper();
     const columns = [
+        columnHelper.accessor('',{
+            header: 'Sr No',
+            cell: info => (currentPage - 1) * pageSize + info.row.index + 1,
+            enableSorting: true,
+            enableGlobalFilter: true
+        }),      
+        columnHelper.accessor('serialNo',{
+            header: 'Task No',
+            cell: info => info.getValue(),
+            enableSorting: true,
+            enableGlobalFilter: true
+        }),      
         columnHelper.accessor('clientLabel',{
             header: 'client',
             cell: info => info.getValue(),
@@ -166,7 +185,7 @@ function Deleted() {
                   break;
               }
                   return (
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${priorityClass}`}>
+                      <span className={`px-2 py-1 rounded-lg text-xs font-semibold ${priorityClass}`}>
                       {priority}
                       </span>
                   );
@@ -174,9 +193,15 @@ function Deleted() {
             enableSorting: true,
             enableGlobalFilter: true
         }),
+        columnHelper.accessor('startDate',{
+            header: 'Start Date',
+            cell: info => formatDate(info.getValue()),
+            enableSorting: true,
+            enableGlobalFilter: true
+        }),
         columnHelper.accessor('endDate',{
             header: 'Due Date',
-            cell: info => info.getValue(),
+            cell: info => formatDate(info.getValue()),
             enableSorting: true,
             enableGlobalFilter: true
         }),
@@ -232,7 +257,7 @@ function Deleted() {
             sorting,
             globalFilter,
             pagination: {
-                pageIndex: currentPage,
+                pageIndex: currentPage-1,
                 pageSize: pageSize
             }
         },
@@ -240,7 +265,7 @@ function Deleted() {
         onGlobalFilterChange: setGlobalFilter,
         // Manual pagination settings
         manualPagination: true,
-        pageCount: hasMorePages ? currentPage + 2 : currentPage + 1, // Dynamically determines page count
+        pageCount: Math.ceil(totalTasks / pageSize),
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(), // This is for client-side filtering on `tasksData`
@@ -255,26 +280,27 @@ function Deleted() {
         if (pageCount === 0) {
             return [];
         }
+        // Calculate half window
+        const half = Math.floor(maxVisiblePages / 2);
 
-        let startPage;
-        if (currentPage < Math.floor(maxVisiblePages / 2)) {
-            startPage = 0;
-        } else if (currentPage > pageCount - 1 - Math.ceil(maxVisiblePages / 2)) {
-            startPage = Math.max(0, pageCount - maxVisiblePages);
-        } else {
-            startPage = currentPage - Math.floor(maxVisiblePages / 2);
+        let startPage = currentPage - half;
+        let endPage = currentPage + half;
+
+        // Clamp start and end
+        if (startPage < 1) {
+            startPage = 1;
+            endPage = Math.min(maxVisiblePages, pageCount);
+        } else if (endPage > pageCount) {
+            endPage = pageCount;
+            startPage = Math.max(1, pageCount - maxVisiblePages + 1);
         }
 
-        for (let i = 0; i < maxVisiblePages; i++) {
-            const pageNum = startPage + i;
-            if (pageNum < pageCount) {
-                numbers.push(pageNum);
-            }
+        for (let i = startPage; i <= endPage; i++) {
+            numbers.push(i);
         }
+        console.log(numbers);
         return numbers;
     }, [currentPage, pageCount]);  
-
-    const addIcon=<IoMdAdd />;  
 
     return (
     <>
@@ -291,7 +317,7 @@ function Deleted() {
       <ConfirmDeleteModal
        onClose={()=>setShowDeleteModal(false)}
        deleteData={deleteData}
-       onTaskAdded={() => fetchTasksWith(filters)}
+       onTaskAdded={() => fetchTasksWith(filters, currentPage)}
        />
     )}
     
@@ -299,7 +325,7 @@ function Deleted() {
       <RestoreTrashModal
        onClose={()=>setRestoreTrashModal(false)}
        restoreData={restoreData}
-       onTaskAdded={() => fetchTasksWith(filters)}
+       onTaskAdded={() => fetchTasksWith(filters, currentPage)}
        />
     )}
 
@@ -310,113 +336,46 @@ function Deleted() {
       
       <div>     
         {/* Global Search Input */}
-        <div className="mb-4 flex items-end justify-between">
+        <div className="mb-4 flex sm:flex-row flex-col gap-1 justify-between">
 
-          <div className='flex gap-1'>
-            <div className='flex border rounded'>
-              <select
-                className="px-2 py-1 text-sm rounded"
-                value={filters.phase}
-                // onChange={(e) => setFilters(prev => ({ ...prev, phase: e.target.value }))}
-                onChange={(e) => {
-                  const newPhase = e.target.value;
-                  setFilters(prev => {
-                    const updated = { ...prev, phase: newPhase };
-                    fetchTasksWith(updated);
-                    return updated;
-                  });
-                }}              
-              >
-                <option value="">All Phases</option>
-                {dropdowns.taskPhases.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <button className='bg-red-500 hover:bg-red-700 p-1 rounded-e text-white'
-                onClick={()=>{
-                  setFilters(prev => ({ ...prev, phase: '' }));
-                }}
-              ><MdOutlineClear /></button>
-            </div>
-
-            <div className='flex border rounded'>
-              <select
-                className="px-2 py-1 text-sm rounded"
-                value={filters.status}
-                // onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
-                onChange={(e) => {
-                  const newStatus = e.target.value;
-                  setFilters(prev => {
-                    const updated = { ...prev, status: newStatus };
-                    fetchTasksWith(updated); 
-                    return updated;
-                  });
-                }}              
-              >
-                <option value="">All Status</option>
-                {dropdowns.statuses.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <button className='bg-red-500 hover:bg-red-700 p-1 rounded-e text-white'
-                onClick={()=>{
-                  setFilters(prev => ({ ...prev, status: '' }));
-                }}
-              ><MdOutlineClear /></button>              
-            </div>
-
-            <div className='flex border rounded'>
-              <select
-                className="px-2 py-1 text-sm rounded"
-                value={filters.priority}
-                // onChange={(e) => setFilters(prev => ({ ...prev, priority: e.target.value }))}
-                onChange={(e) => {
-                  const newPriority = e.target.value;
-                  setFilters(prev => {
-                    const updated = { ...prev, priority: newPriority };
-                    fetchTasksWith(updated); 
-                    return updated;
-                  });
-                }}                 
-              >
-                <option value="">All Priorities</option>
-                {dropdowns.taskPriorities.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <button className='bg-red-500 hover:bg-red-700 p-1 rounded-e text-white'
-                onClick={()=>{
-                  setFilters(prev => ({ ...prev, priority: '' }));
-                }}
-              ><MdOutlineClear /></button>
-            </div>
+          <div className="flex sm:flex-row flex-col gap-1">
+            {['phase','status','priority'].map(filterKey => (
+              <div key={filterKey} className='flex border rounded'>
+                <select
+                  className="px-2 py-1 text-sm w-full rounded"
+                  value={filters[filterKey]}
+                  onChange={(e) => setFilters(prev => ({ ...prev, [filterKey]: e.target.value }))}
+                >
+                  <option value="">All {filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}</option>
+                  {(dropdowns[filterKey === 'phase' ? 'taskPhases' : filterKey === 'status' ? 'statuses' : 'taskPriorities'] || []).map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+                <button className='bg-red-500 hover:bg-red-700 p-1 rounded-e text-white'
+                  onClick={() => setFilters(prev => ({ ...prev, [filterKey]: '' }))}><MdOutlineClear/></button>
+              </div>
+            ))}
           </div>
 
           {/* Input Search New*/}
             <InputSearch 
               type="text" 
               placeholder="Search Client Name, Title" 
+              className="px-1 py-1 text-sm"
+              clearBtnClassName="px-1 py-1 text-sm"
+              searchBtnClassName="px-1 py-1 text-sm"              
               value={searchText}
               onChange={e => setSearchText(e.target.value)} 
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   setAppliedSearchText(searchText); // Apply the current input
-                  setCurrentPage(0);
-                  setCursors([null]);
-                  fetchTasksWith(filters, 0);
+                  setCurrentPage(1);
                 }
               }}
               onSearch={(value) => {
                 setSearchText(value); // update input
               }}
-              onClear={() => {
-                setSearchText('');
-                setAppliedSearchText('');
-                setGlobalFilter('');
-                setCurrentPage(0);
-                setCursors([null]);
-                fetchTasksWith(filters, 0);
-              }}
+              onClear={() => { setSearchText(''); setAppliedSearchText(''); setCurrentPage(1); }}
               showClear={true}
             />
         </div>
@@ -498,16 +457,8 @@ function Deleted() {
             {/* Previous Button */}
             <button
               className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-              // onClick={() => table.previousPage()}
-              onClick={() => {
-                setCurrentPage(prev => {
-                  const newPage = Math.max(prev - 1, 0);
-                  fetchTasksWith(filters, newPage); // fetch that page
-                  return newPage;
-                });
-              }}
-              // disabled={!table.getCanPreviousPage()}
-              disabled={currentPage === 0}
+              onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}            
+              disabled={currentPage === 1}
             >
               &laquo;
             </button>
@@ -519,10 +470,9 @@ function Deleted() {
                   <button
                     onClick={() => {
                       setCurrentPage(pageNumber);
-                      fetchTasksWith(filters, pageNumber);
                     }}
                     className={`px-3 py-1 border border-gray-300 rounded-md text-sm font-medium ${currentPage === pageNumber ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-white text-gray-700 hover:bg-gray-50' }`} >
-                    {pageNumber + 1} {/* Display 1-indexed page number */}
+                    {pageNumber} {/* Display 1-indexed page number */}
                   </button>
                 ) : (
                   <span className="px-3 py-1 text-gray-700">...</span>
@@ -532,15 +482,8 @@ function Deleted() {
 
             <button
               // onClick={() => table.nextPage()}
-              onClick={() => {
-                setCurrentPage(prev => {
-                  const newPage = prev + 1;
-                  fetchTasksWith(filters, newPage);
-                  return newPage;
-                });
-              }}
-              // disabled={!table.getCanNextPage()}
-              disabled={!hasMorePages}
+              onClick={() => setCurrentPage(p => Math.min(p + 1, Math.ceil(totalTasks / pageSize)))}
+              disabled={currentPage >= Math.ceil(totalTasks / pageSize)}
               className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               &raquo;
@@ -551,7 +494,7 @@ function Deleted() {
           <span className="text-sm text-gray-700 mb-2">
             Page{' '}
             <span className="font-semibold">
-              {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+              {currentPage} of {Math.ceil(totalTasks / pageSize)}
             </span>
           </span>
         </div>

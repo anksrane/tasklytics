@@ -44,6 +44,9 @@ import Sidebar from "./layout/Sidebar";
 import Header from "./layout/Header";
 import AppLayout from "./layout/AppLayout";
 import Login from "./layout/Login";
+import Profile from './layout/profile/Profile';
+import PopoverMenu from './layout/profile/PopoverMenu';
+import ProfilePopup from './layout/profile/ProfilePopup';
 
 import Skeleton from "./ui/Skeleton/Skeleton";
 import ChartSkeleton from "./ui/Skeleton/ChartSkeleton";
@@ -97,6 +100,9 @@ export {
     Sidebar,
     Header,
     AppLayout,
+    Profile,
+    PopoverMenu,
+    ProfilePopup,
 
     Skeleton,
     ChartSkeleton,

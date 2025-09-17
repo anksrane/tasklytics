@@ -46,22 +46,16 @@ function DeletePhase({onClose, phaseData, onPhaseDeleted}) {
 
     const backdropRef = useRef(null);
 
-    const handleMouseDown = (e) => {
-        setTimeout(() => {
-        backdropRef.current.clickedOnBackdrop = e.target === backdropRef.current;
-        }, 0);
-    };
-
-    const handleMouseUp = (e) => {
-        if (backdropRef.current.clickedOnBackdrop && e.target === backdropRef.current) {
-        onClose(); 
-        }
-    }; 
+    const handleBackdropClick = (e) => {
+      if (e.target === backdropRef.current) {
+        onClose();
+      }
+    };  
     return (
         <div 
         ref={backdropRef} 
-        className='fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center cursor-pointer' onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
-          <div className='bg-white w-auto min-w-96 h-fit flex flex-col p-4 cursor-auto' onMouseDown={(e) => e.stopPropagation()} onMouseUp={(e) => e.stopPropagation()} >
+        className='fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center cursor-pointer' onClick={handleBackdropClick} >
+          <div className='bg-white w-auto min-w-96 h-fit flex flex-col p-4 cursor-auto' onClick={(e) => e.stopPropagation()}  >
             <IoIosWarning className='text-5xl m-auto mb-4 text-red-500' />
             {
               loading ? (

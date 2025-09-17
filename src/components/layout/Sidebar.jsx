@@ -6,31 +6,23 @@ import { MdDashboardCustomize } from "react-icons/md";
 import { BiTask } from "react-icons/bi";
 import { MdGroups } from "react-icons/md";
 import { TiPower } from "react-icons/ti";
+import { IoMdCloseCircle } from "react-icons/io";
 import { GoTrash } from "react-icons/go";
 import { GoOrganization } from "react-icons/go";
 import { IoSettings } from "react-icons/io5";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { logoutUser } from '../../features/auth/authActions'
-import { setIsSidebarOpen } from "../../features/ui/uiSlice"
+import { toggleSidebar, setIsSidebarOpen } from "../../features/ui/uiSlice"
 
 function Sidebar({isOpen}) {
-    const {user} = useSelector((state)=>state.auth);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const handleLogout = async () => {
-      dispatch(setIsSidebarOpen(false));
-      await dispatch(logoutUser());
-      navigate('/login');
-    };    
+    const {user} = useSelector((state)=>state.auth);  
+    const dispatch=useDispatch();
   
     const navItems=[
       { name: 'Dashboard', path:"/dashboard", icon:MdDashboardCustomize},
-      { name: 'Tasks', path:"/tasks", icon: BiTask},
-      // { name: 'Team', path: '/team', icon:MdGroups },   
+      { name: 'Tasks', path:"/tasks", icon: BiTask}, 
       { name: 'Deleted Items', path: '/deleted', icon:GoTrash, role: 'Admin' },    
-      { name: 'Clients', path: '/clients', icon:IoSettings, role: 'Admin' },    
+      { name: 'Clients', path: '/clients', icon:GoOrganization, role: 'Admin' },    
       { name: 'Phases', path: '/phases', icon:IoSettings, role: 'Admin' },    
       { name: 'Priorities', path: '/priorities', icon:IoSettings, role: 'Admin' },    
       { name: 'Statuses', path: '/statuses', icon:IoSettings, role: 'Admin' },    
@@ -41,11 +33,17 @@ function Sidebar({isOpen}) {
     );    
 
     return (
-      <aside className={`h-screen bg-gray-100 border-r shadow-md p-2 flex flex-col justify-between duration-500 ${isOpen? 'w-64' : 'w-20'}`}>
+      <aside className={`h-screen bg-brand-primary-900 border-r shadow-md p-2 flex flex-col justify-between duration-500 ${isOpen? 'fixed top-0 z-50 left-0 w-full md:static md:w-64' : 'hidden md:flex md:w-20'}`}>
         <div>
-          <div className={`flex justify-center items-center gap-2 text-xl font-bold text-center transition-opacity py-2 duration-300`}>
-            <FaTasks className='text-xl text-gray-700'/>
-            <h2 className={`text-xl font-bold text-center text-gray-700 ${isOpen ? 'opacity-100 block' : 'opacity-0 hidden'}`}> Tasklytics</h2>
+          <div className='md:block flex justify-between items-center'>
+            <div className='md:hidden block'></div>
+            <div className={`flex justify-center items-center gap-2 text-xl font-bold text-center py-2 transition-all duration-200`}>
+              <FaTasks className='text-xl text-brand-text-light'/>
+              <h2 className={`text-xl font-bold text-center text-brand-text-light ${isOpen ?  "opacity-100 w-auto ml-2" : "opacity-0 w-0 ml-0"}`}> Tasklytics</h2>
+            </div>
+            <div className='md:hidden block'>
+              <IoMdCloseCircle className='text-2xl text-brand-neutral-500 cursor-pointer' onClick={()=>dispatch(toggleSidebar())} />
+            </div>
           </div>
 
           <nav className="space-y-3 mt-5">
@@ -57,27 +55,24 @@ function Sidebar({isOpen}) {
                   to={item.path}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-4 py-2 rounded-md font-medium transition 
-                    ${isActive ? 'bg-black text-white' : 'text-gray-700 hover:bg-gray-900 hover:text-white duration-300'}`
+                    ${isActive ? 'bg-brand-primary-500 text-brand-text-light' : 'text-brand-text-light hover:bg-brand-primary-500 hover:text-brand-text-light duration-300'}`
                   }
+                  onClick={() => dispatch(setIsSidebarOpen(false))}
                 >
-                  <Icon className="text-xl 'text-gray-700 hover:bg-gray-900" />
-                  {isOpen && <span>{item.name}</span>}
+                  <Icon className="text-xl 'text-brand-text-light hover:bg-brand-primary-500" />
+                  {/* <span className={isOpen ? 'transition-opacity duration-100 opacity-100 inline-block' : 'transition-opacity duration-100 opacity-0 hidden'}>{isOpen? item.name : ""}</span> */}
+                  <span
+                    className={`
+                      whitespace-nowrap overflow-hidden transition-all duration-300
+                      ${isOpen ? "opacity-100 max-w-xs ml-2" : "opacity-0 max-w-0 ml-0"}
+                    `}
+                  >
+                    {item.name}
+                  </span>                  
                 </NavLink>
               );
             })}
           </nav>
-        </div>
-
-        <div className="mt-6 border-t pt-4">
-          <Button
-            variant="outline"
-            className="w-full flex items-center gap-2 justify-center text-red-600 border-red-600 hover:bg-red-100"
-            // onClick={() => console.log('Logout here')}
-            onClick={handleLogout}
-          >
-            <TiPower className='text-2xl'/>
-            {isOpen && <span>Logout</span>}
-          </Button>
         </div>
       </aside>
     )

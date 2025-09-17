@@ -1,16 +1,16 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react'
-import { ButtonWithIcon, AddTask, ViewTask, ConfirmTrashModal } from '../index.js'
-import { InputSearch, Loader } from '../index.js';
+import { ButtonWithIcon, AddTask, ViewTask, ConfirmTrashModal, InputSearch, Loader } from '../index.js'
 import { IoMdAdd } from "react-icons/io";
-import { fetchAllDropdowns } from '../../firebase/dropdownService.js';
-import { getAllTaskFirebase } from '../../firebase/taskServices/getAllTasksWithFilter.js';
-import { deleteAllTasksService } from '../../firebase/taskServices/deleteAllTasksService.js'
 import { MdOutlineClear } from "react-icons/md";
 import { TbEdit } from "react-icons/tb";
 import { IoEyeSharp } from "react-icons/io5";
 import { GoTrash } from "react-icons/go";
 import { useSelector } from 'react-redux';
 import { Timestamp } from "firebase/firestore";
+
+import { fetchAllDropdowns } from '../../firebase/dropdownService.js';
+import { getAllTaskFirebase } from '../../firebase/taskServices/getAllTasksWithFilter.js';
+import { deleteAllTasksService } from '../../firebase/taskServices/deleteAllTasksService.js'
 
 import {
   useReactTable,
@@ -47,6 +47,7 @@ function Tasks() {
     const {user}=useSelector((state)=>state.auth);
 
     const [tasksData, setTasksData] = useState([]);
+    const [totalTasks, setTotalTasks] = useState(0);
     const [loadingTasks, setLoadingTasks] = useState(true);
     const [loadingDropdowns, setLoadingDropdowns] = useState(true);
     const [showAddTaskModal, setShowAddTaskModal] = useState(false);
@@ -59,25 +60,14 @@ function Tasks() {
 
     const [sorting,setSorting]=useState([]);
     const [globalFilter,setGlobalFilter]=useState('');
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize] = useState(10);
-    const [cursors, setCursors] = useState([null]); 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize] = useState(10); 
     const [searchText,setSearchText]=useState('');
     const [appliedSearchText, setAppliedSearchText] = useState('');
     const [hasMorePages, setHasMorePages] = useState(false);
-    const [filters, setFilters] = useState({
-      phase: '',
-      status: '',
-      priority: '',
-      trash: false
-    });
+    const [filters, setFilters] = useState({ phase: '', status: '', priority: '', trash: false });
 
-    const [dropdowns, setDropdowns] = useState({
-        taskPhases: [],
-        taskPriorities: [],
-        statuses: [],
-        clients:[]
-    });
+    const [dropdowns, setDropdowns] = useState({ taskPhases: [], taskPriorities: [], statuses: [], clients: [] });
 
     // Fetch all dropdown options
     useEffect(() => {
@@ -98,14 +88,11 @@ function Tasks() {
 
     // Fetch all task with data
     const fetchTasksWith = useCallback(async (customFilters = filters, targetPage = currentPage) => {
-      setTasksData([]);
       setLoadingTasks(true);
+      setTasksData([]);
 
       const sortBy = sorting[0]?.id || 'created_at';
-      const sortOrder = sorting[0]?.desc ? 'desc' : 'asc';
-
-      // Get the cursor for the targetPage (which means to start *after* this document)
-      const cursorForQuery = cursors[targetPage] || null      
+      const sortOrder = sorting[0]?.desc ? 'desc' : 'asc';   
 
       const response = await getAllTaskFirebase(
         user,
@@ -114,7 +101,7 @@ function Tasks() {
         sortBy,
         sortOrder,
         pageSize,
-        cursorForQuery,
+        targetPage,
         dropdowns.taskPhases, 
         dropdowns.taskPriorities,
         dropdowns.statuses,
@@ -123,10 +110,9 @@ function Tasks() {
 
       if (response.success) {
         setTasksData(response.data);
-        setHasMorePages(response.hasMore);
-        if (response.nextCursor && cursors.length === targetPage + 1) {
-          setCursors(prev => [...prev, response.nextCursor]);
-        }     
+        setHasMorePages(response.hasMore);  
+        setTotalTasks(response.total);
+        setCurrentPage(response.currentPage);
       } else {
         console.error("Failed to fetch tasks:", response.error);
         setTasksData([]); 
@@ -134,7 +120,7 @@ function Tasks() {
       }
 
       setLoadingTasks(false);
-    },[filters, sorting, appliedSearchText, pageSize, cursors, currentPage, dropdowns]);
+    },[user,filters, sorting, appliedSearchText, pageSize, currentPage, dropdowns]);
 
 
     useEffect(() => {
@@ -148,7 +134,7 @@ function Tasks() {
     const columns = [
         columnHelper.accessor('',{
             header: 'Sr No',
-            cell: info => currentPage * pageSize + info.row.index + 1,
+            cell: info => (currentPage - 1) * pageSize + info.row.index + 1,
             enableSorting: true,
             enableGlobalFilter: true
         }),      
@@ -272,18 +258,17 @@ function Tasks() {
             sorting,
             globalFilter,
             pagination: {
-                pageIndex: currentPage,
+                pageIndex: currentPage-1,
                 pageSize: pageSize
             }
         },
         onSortingChange: setSorting,
         onGlobalFilterChange: setGlobalFilter,
-        // Manual pagination settings
         manualPagination: true,
-        pageCount: hasMorePages ? currentPage + 2 : currentPage + 1, // Dynamically determines page count
+        pageCount: Math.ceil(totalTasks / pageSize),
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(), // This is for client-side filtering on `tasksData`
+        getFilteredRowModel: getFilteredRowModel(), 
     });
 
     const pageCount = table.getPageCount(); 
@@ -296,21 +281,25 @@ function Tasks() {
             return [];
         }
 
-        let startPage;
-        if (currentPage < Math.floor(maxVisiblePages / 2)) {
-            startPage = 0;
-        } else if (currentPage > pageCount - 1 - Math.ceil(maxVisiblePages / 2)) {
-            startPage = Math.max(0, pageCount - maxVisiblePages);
-        } else {
-            startPage = currentPage - Math.floor(maxVisiblePages / 2);
+        // Calculate half window
+        const half = Math.floor(maxVisiblePages / 2);
+
+        let startPage = currentPage - half;
+        let endPage = currentPage + half;
+
+        // Clamp start and end
+        if (startPage < 1) {
+            startPage = 1;
+            endPage = Math.min(maxVisiblePages, pageCount);
+        } else if (endPage > pageCount) {
+            endPage = pageCount;
+            startPage = Math.max(1, pageCount - maxVisiblePages + 1);
         }
 
-        for (let i = 0; i < maxVisiblePages; i++) {
-            const pageNum = startPage + i;
-            if (pageNum < pageCount) {
-                numbers.push(pageNum);
-            }
+        for (let i = startPage; i <= endPage; i++) {
+            numbers.push(i);
         }
+        console.log(numbers);
         return numbers;
     }, [currentPage, pageCount]);  
 
@@ -322,7 +311,8 @@ function Tasks() {
         }
         try {
             await deleteAllTasksService();
-            fetchTasksWith(filters);
+            setCurrentPage(1);
+            fetchTasksWith(filters, 1);
             alert("All tasks deleted and serial number reset!");
         } catch (error) {
             alert("Error deleting tasks. Check console for details.",error);
@@ -339,7 +329,7 @@ function Tasks() {
         show={showAddTaskModal} 
         singleTask= {singleTask}
         editingMode={editingMode}
-        onTaskAdded={() => fetchTasksWith(filters)} 
+        onTaskAdded={() => fetchTasksWith(filters, currentPage)} 
         taskPhasesOptions={dropdowns.taskPhases} // Pass as prop
         taskPrioritiesOptions={dropdowns.taskPriorities} // Pass as prop
         statusesOptions={dropdowns.statuses} // Pass as prop
@@ -359,7 +349,7 @@ function Tasks() {
       <ConfirmTrashModal
        onClose={()=>setShowDeleteModal(false)}
        deleteData={deleteData}
-       onTaskAdded={() => fetchTasksWith(filters)}
+       onTaskAdded={() => fetchTasksWith(filters, currentPage)}
        />
     )}
 
@@ -368,7 +358,7 @@ function Tasks() {
       
       <div>
           {/* Add Task Button */}
-          <ButtonWithIcon icon={addIcon} iconClass={'text-xl font-bold'} iconPosition="left" variant="primary" className='text-sm mt-0' 
+          <ButtonWithIcon icon={addIcon} iconClass={'text-xl font-bold'} iconPosition="left" variant="primary" className='text-sm mt-0 mb-2' 
             onClick={()=>{
               setShowAddTaskModal(true);
               setEditingMode(false);
@@ -377,90 +367,25 @@ function Tasks() {
             Add Task
           </ButtonWithIcon>        
         {/* Global Search Input */}
-        <div className="mb-4 flex items-end justify-between">
+        <div className="mb-4 flex sm:flex-row flex-col gap-1 justify-between">
 
-          <div className='flex gap-1'>
-            <div className='flex border rounded'>
-              <select
-                className="px-2 py-1 text-sm rounded"
-                value={filters.phase}
-                // onChange={(e) => setFilters(prev => ({ ...prev, phase: e.target.value }))}
-                onChange={(e) => {
-                  const newPhase = e.target.value;
-                  setFilters(prev => {
-                    const updated = { ...prev, phase: newPhase };
-                    fetchTasksWith(updated);
-                    return updated;
-                  });
-                }}              
-              >
-                <option value="">All Phases</option>
-                {dropdowns.taskPhases.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <button className='bg-red-500 hover:bg-red-700 p-1 rounded-e text-white'
-                onClick={()=>{
-                  setFilters(prev => ({ ...prev, phase: '' }));
-                }}
-              ><MdOutlineClear /></button>
-            </div>
-
-            <div className='flex border rounded'>
-              <select
-                className="px-2 py-1 text-sm rounded"
-                value={filters.status}
-                // onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
-                onChange={(e) => {
-                  const newStatus = e.target.value;
-                  setFilters(prev => {
-                    const updated = { ...prev, status: newStatus };
-                    fetchTasksWith(updated); 
-                    return updated;
-                  });
-                }}              
-              >
-                <option value="">All Status</option>
-                {dropdowns.statuses.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <button className='bg-red-500 hover:bg-red-700 p-1 rounded-e text-white'
-                onClick={()=>{
-                  setFilters(prev => ({ ...prev, status: '' }));
-                }}
-              ><MdOutlineClear /></button>              
-            </div>
-
-            <div className='flex border rounded'>
-              <select
-                className="px-2 py-1 text-sm rounded"
-                value={filters.priority}
-                // onChange={(e) => setFilters(prev => ({ ...prev, priority: e.target.value }))}
-                onChange={(e) => {
-                  const newPriority = e.target.value;
-                  setFilters(prev => {
-                    const updated = { ...prev, priority: newPriority };
-                    fetchTasksWith(updated); 
-                    return updated;
-                  });
-                }}                 
-              >
-                <option value="">All Priorities</option>
-                {dropdowns.taskPriorities.map(option => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <button className='bg-red-500 hover:bg-red-700 p-1 rounded-e text-white'
-                onClick={()=>{
-                  setFilters(prev => ({ ...prev, priority: '' }));
-                }}
-              ><MdOutlineClear /></button>
-            </div>
-
-            {/* <div>
-              <button onClick={handleDeleteAll} className='bg-black text-white py-1 px-2 rounded-lg'>Delete All</button>
-            </div> */}
+          <div className="flex sm:flex-row flex-col gap-1">
+            {['phase','status','priority'].map(filterKey => (
+              <div key={filterKey} className='flex border rounded'>
+                <select
+                  className="px-2 py-1 text-sm w-full rounded"
+                  value={filters[filterKey]}
+                  onChange={(e) => setFilters(prev => ({ ...prev, [filterKey]: e.target.value }))}
+                >
+                  <option value="">All {filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}</option>
+                  {(dropdowns[filterKey === 'phase' ? 'taskPhases' : filterKey === 'status' ? 'statuses' : 'taskPriorities'] || []).map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+                <button className='bg-red-500 hover:bg-red-700 p-1 rounded-e text-white'
+                  onClick={() => setFilters(prev => ({ ...prev, [filterKey]: '' }))}><MdOutlineClear/></button>
+              </div>
+            ))}
           </div>
 
           {/* Input Search New*/}
@@ -468,26 +393,17 @@ function Tasks() {
               type="text" 
               placeholder="Search Client Name, Title" 
               value={searchText}
+              className="px-1 py-1 text-sm"
+              clearBtnClassName="px-1 py-1 text-sm"
+              searchBtnClassName="px-1 py-1 text-sm"
               onChange={e => setSearchText(e.target.value)} 
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   setAppliedSearchText(searchText); // Apply the current input
-                  setCurrentPage(0);
-                  setCursors([null]);
-                  fetchTasksWith(filters, 0);
+                  setCurrentPage(1);
                 }
               }}
-              onSearch={(value) => {
-                setSearchText(value); // update input
-              }}
-              onClear={() => {
-                setSearchText('');
-                setAppliedSearchText('');
-                setGlobalFilter('');
-                setCurrentPage(0);
-                setCursors([null]);
-                fetchTasksWith(filters, 0);
-              }}
+              onClear={() => { setSearchText(''); setAppliedSearchText(''); setCurrentPage(1); }}
               showClear={true}
             />
         </div>
@@ -567,15 +483,8 @@ function Tasks() {
               <button
                 className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 // onClick={() => table.previousPage()}
-                onClick={() => {
-                  setCurrentPage(prev => {
-                    const newPage = Math.max(prev - 1, 0);
-                    fetchTasksWith(filters, newPage); // fetch that page
-                    return newPage;
-                  });
-                }}
-                // disabled={!table.getCanPreviousPage()}
-                disabled={currentPage === 0}
+                onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}            
+                disabled={currentPage === 1}
               >
                 &laquo;
               </button>
@@ -583,14 +492,13 @@ function Tasks() {
               {/* Page Numbers */}
               {pageNumbers.map((pageNumber, index) => (
                 <React.Fragment key={index}> {/* Use index for keys for ellipses */}
-                  {typeof pageNumber === 'number' ? (
+                  {typeof pageNumber == 'number' ? (
                     <button
                       onClick={() => {
                         setCurrentPage(pageNumber);
-                        fetchTasksWith(filters, pageNumber);
                       }}
                       className={`px-3 py-1 border border-gray-300 rounded-md text-sm font-medium ${currentPage === pageNumber ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-white text-gray-700 hover:bg-gray-50' }`} >
-                      {pageNumber + 1} {/* Display 1-indexed page number */}
+                      {pageNumber} {/* Display 1-indexed page number */}
                     </button>
                   ) : (
                     <span className="px-3 py-1 text-gray-700">...</span>
@@ -600,15 +508,8 @@ function Tasks() {
 
               <button
                 // onClick={() => table.nextPage()}
-                onClick={() => {
-                  setCurrentPage(prev => {
-                    const newPage = prev + 1;
-                    fetchTasksWith(filters, newPage);
-                    return newPage;
-                  });
-                }}
-                // disabled={!table.getCanNextPage()}
-                disabled={!hasMorePages}
+                onClick={() => setCurrentPage(p => Math.min(p + 1, Math.ceil(totalTasks / pageSize)))}
+                disabled={currentPage >= Math.ceil(totalTasks / pageSize)}
                 className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 &raquo;
@@ -619,7 +520,8 @@ function Tasks() {
             <span className="text-sm text-gray-700 mb-2">
               Page{' '}
               <span className="font-semibold">
-                {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                {/* {table.getState().pagination.pageIndex + 1} of {table.getPageCount()} */}
+                {currentPage} of {Math.ceil(totalTasks / pageSize)}
               </span>
             </span>
           </div>            

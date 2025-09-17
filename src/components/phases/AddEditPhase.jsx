@@ -41,17 +41,11 @@ function AddEditPhase({ onClose, onPhaseAdded, phaseData, editingMode }) {
 
   const backdropRef = useRef(null);
 
-  const handleMouseDown = (e) => {
-    setTimeout(() => {
-      backdropRef.current.clickedOnBackdrop = e.target === backdropRef.current;
-    }, 0);
-  };
-
-  const handleMouseUp = (e) => {
-    if (backdropRef.current.clickedOnBackdrop && e.target === backdropRef.current) {
+  const handleBackdropClick = (e) => {
+    if (e.target === backdropRef.current) {
       onClose();
     }
-  };
+  };  
   
   const onSubmit = async (data) => {
     setLoading(true);
@@ -89,13 +83,11 @@ function AddEditPhase({ onClose, onPhaseAdded, phaseData, editingMode }) {
     <div
       ref={backdropRef}
       className='fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center cursor-pointer'
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
+      onClick={handleBackdropClick}
     >
       <div
         className='bg-white w-96 h-fit flex flex-col p-4 cursor-auto'
-        onMouseDown={(e) => e.stopPropagation()}
-        onMouseUp={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()} 
       >
         <div className='flex justify-end mb-2'>
           <button onClick={onClose}><IoMdCloseCircle className='text-2xl' /></button>

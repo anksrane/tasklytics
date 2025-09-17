@@ -12,8 +12,10 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
     "@tanstack/react-table": "^8.21.3",
+    "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "firebase": "^11.10.0",
+    "framer-motion": "^12.23.12",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-google-charts": "^5.2.1",
