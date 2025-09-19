@@ -35,9 +35,9 @@ function ViewTask({onClose, viewData }) {
       <div ref={backdropRef} className='fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-end cursor-pointer' onClick={handleBackdropClick}>
         <div className='bg-white sm:w-96 w-full h-full flex flex-col p-4 cursor-auto' onClick={(e) => e.stopPropagation()}  >
           <div className='flex justify-end mb-2'>
-            <button onClick={onClose}><IoMdCloseCircle className='text-2xl'/></button>
+            <button onClick={onClose}><IoMdCloseCircle className='text-2xl text-dark'/></button>
           </div>
-          <h2 className="text-2xl font-bold mb-4 text-center">View Task</h2>
+          <h2 className="text-2xl font-bold mb-4 text-center text-dark">View Task</h2>
 
           {loading?(
             <>
@@ -50,43 +50,43 @@ function ViewTask({onClose, viewData }) {
               <div className='container mx-auto pt-5 pb-4 relative'> 
 
                 <div className='mb-2'>
-                  <h5 className='px-1 font-semibold'>Client Name : </h5>
-                  <p className='px-1'>{viewData.clientLabel}</p>
+                  <h5 className='font-semibold text-sm'>Client Name : </h5>
+                  <p className='py-1 px-2 border border-disabled text-text text-sm rounded-md'>{viewData.clientLabel}</p>
                 </div>
 
                 <div className='mb-2'>
-                  <h5 className='px-1 font-semibold'>Task Title : </h5>
-                  <p className='px-1'>{viewData.title}</p>
+                  <h5 className='font-semibold text-sm'>Task Title : </h5>
+                  <p className='py-1 px-2 border border-disabled text-text text-sm rounded-md'>{viewData.title}</p>
                 </div>
 
                 <div className='mb-2'>
-                  <h5 className='px-1 font-semibold'>Task Description : </h5>
-                  <p className='px-1'>{viewData.description}</p>
+                  <h5 className='font-semibold text-sm'>Task Description : </h5>
+                  <p className='py-1 px-2 border border-disabled text-text text-sm rounded-md'>{viewData.description}</p>
                 </div>
 
                 <div className='mb-2'>
-                  <h5 className='px-1 font-semibold'>Task Phase : </h5>
-                  <p className='px-1'>{viewData.taskPhaseLabel}</p>
+                  <h5 className='font-semibold text-sm'>Task Phase : </h5>
+                  <p className='py-1 px-2 border border-disabled text-text text-sm rounded-md'>{viewData.taskPhaseLabel}</p>
                 </div>
 
                 <div className='mb-2'>
-                  <h5 className='px-1 font-semibold'>Task Status : </h5>
-                  <p className='px-1'>{viewData.taskStatusLabel}</p>
+                  <h5 className='font-semibold text-sm'>Task Status : </h5>
+                  <p className='py-1 px-2 border border-disabled text-text text-sm rounded-md'>{viewData.taskStatusLabel}</p>
                 </div>
 
                 <div className='mb-2'>
-                  <h5 className='px-1 font-semibold'>Task Priority : </h5>
-                  <p className='px-1'>{viewData.priorityLabel}</p>
+                  <h5 className='font-semibold text-sm'>Task Priority : </h5>
+                  <p className='py-1 px-2 border border-disabled text-text text-sm rounded-md'>{viewData.priorityLabel}</p>
                 </div>
 
                 <div className='mb-2'>
-                  <h5 className='px-1 font-semibold'>Task Start Date : </h5>
-                  <p className='px-1'>{startDate}</p>
+                  <h5 className='font-semibold text-sm'>Task Start Date : </h5>
+                  <p className='py-1 px-2 border border-disabled text-text text-sm rounded-md'>{startDate}</p>
                 </div>
 
                 <div className='mb-2'>
-                  <h5 className='px-1 font-semibold'>Task End Date : </h5>
-                  <p className='px-1'>{endDate}</p>
+                  <h5 className='font-semibold text-sm'>Task End Date : </h5>
+                  <p className='py-1 px-2 border border-disabled text-text text-sm rounded-md'>{endDate}</p>
                 </div>
 
                 {user.userRole=="Coder"?(
@@ -94,10 +94,10 @@ function ViewTask({onClose, viewData }) {
                   :
                   (
                   <div className='mb-2'>
-                    <h5 className='px-1 font-semibold'>Coders : </h5>
+                    <h5 className='font-semibold text-sm'>Coders : </h5>
                     {codersList && codersList.length > 0 && (
                       <>
-                        <p className='px-1'>{codersList}</p>
+                        <p className='py-1 px-2 border border-disabled text-text text-sm rounded-md'>{codersList}</p>
                       </>
                     )}
                   </div>                  

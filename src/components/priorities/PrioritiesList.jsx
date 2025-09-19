@@ -89,14 +89,14 @@ function PrioritiesList() {
         cell: props => (
         <div className="flex gap-3 justify-center">
             <button
-            className="border border-slate-500 font-bold p-1 hover:delay-100 hover:bg-black hover:text-white rounded text-xs"
+            className="border border-background font-bold p-1 hover:delay-100 text-backgorund hover:bg-background hover:text-text-light rounded-md text-xs"
             onClick={() => handleOpenEditPopup(props.row.original)}
             >
             <TbEdit className='text-xl font-bold'/>
             </button>
 
             <button
-            className="border border-red-500 font-bold p-1 hover:delay-100 hover:bg-red-500 text-red-500 hover:text-white rounded text-xs"
+            className="border border-danger font-bold p-1 hover:delay-100 text-danger hover:bg-danger hover:text-text-light rounded-md text-xs"
               onClick={()=> handleOpenDeletePopup(props.row.original)}
             >
             <GoTrash className='text-lg font-bold'/>
@@ -162,7 +162,7 @@ function PrioritiesList() {
 
       <div className='mb-4 flex xs:flex-row flex-col gap-1 justify-between'>
         {/* Add priorities */}
-        <ButtonWithIcon icon={addIcon} iconClass={'text-xl font-bold'} iconPosition="left" variant="primary" className='text-sm mt-0' 
+        <ButtonWithIcon icon={addIcon} iconClass={'text-lg font-800'} iconPosition="left" variant="primary" className='text-sm mt-0 mb-2 font-semibold px-4 py-1' 
           onClick={() => setShowAddEditPriorities(true)}>
           Add Priorities
         </ButtonWithIcon>         
@@ -171,6 +171,9 @@ function PrioritiesList() {
         <InputSearch
           placeholder="Search priorities..."
           value={searchText}
+          className="px-1 py-1 text-sm"
+          clearBtnClassName="px-1 py-1 text-sm text-transpart"
+          searchBtnClassName="px-1 py-1 text-sm"             
           onChange={(e) => setSearchText(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -193,72 +196,74 @@ function PrioritiesList() {
       {loading ?
       (
         <div className="flex justify-center items-center h-40">
-          <Loader color='text-blue' />
+          <Loader className='text-primary' />
         </div>          
-      ):(      
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-sm">
-            <thead className="bg-gray-100">
-              {table.getHeaderGroups().map(headerGroup => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map(header => (
-                    <th
-                      key={header.id}
-                      scope="col"
-                      className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider select-none 
-                        ${header.id === "serialNo" ? "w-[10%]" : ""} 
-                        ${header.id === "label" ? "w-[75%]" : ""} 
-                        ${header.id === "actions" ? "w-[15%]" : ""} 
-                        ${header.column.getCanSort() ? "cursor-pointer" : ""}`}
-                      onClick={header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
-                    >
-                      <div className={`flex items-center gap-1 ${header.id === "actions" ? "justify-center" : ""}`}>
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.column.getCanSort() && (
-                          <span>
-                            {{
-                              asc: ' 🔼', 
-                              desc: ' 🔽', 
-                            }[header.column.getIsSorted()] ?? null}
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {table.getRowModel().rows.length === 0 ? (
-                <tr>
-                  <td colSpan={columns.length} className="px-6 py-4 text-center text-gray-500">
-                    No priorities found.
-                  </td>
-                </tr>
-              ) : (
-                table.getRowModel().rows.map(row => (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map(cell => (
-                      <td
-                        key={cell.id}
-                        className="px-6 py-3 whitespace-nowrap text-sm text-gray-900 text-left"
+      ):(  
+        <div>
+          <div className="overflow-x-auto rounded-md">
+            <table className="min-w-full border rounded-md shadow-sm text-text">
+              <thead className="bg-primary text-text">
+                {table.getHeaderGroups().map(headerGroup => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map(header => (
+                      <th
+                        key={header.id}
+                        scope="col"
+                        className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider select-none 
+                          ${header.id === "serialNo" ? "w-[10%]" : ""} 
+                          ${header.id === "label" ? "w-[75%]" : ""} 
+                          ${header.id === "actions" ? "w-[15%]" : ""} 
+                          ${header.column.getCanSort() ? "cursor-pointer" : ""}`}
+                        onClick={header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
                       >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
+                        <div className={`flex items-center gap-1 ${header.id === "actions" ? "justify-center" : ""}`}>
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanSort() && (
+                            <span>
+                              {{
+                                asc: ' 🔼', 
+                                desc: ' 🔽', 
+                              }[header.column.getIsSorted()] ?? null}
+                            </span>
+                          )}
+                        </div>
+                      </th>
                     ))}
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>      
+                ))}
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {table.getRowModel().rows.length === 0 ? (
+                  <tr>
+                    <td colSpan={columns.length} className="px-6 py-4 text-center bg-table-light">
+                      No phases found.
+                    </td>
+                  </tr>
+                ) : (
+                  table.getRowModel().rows.map(row => (
+                    <tr key={row.id} className='border-b bg-table-light hover:bg-table'>
+                      {row.getVisibleCells().map(cell => (
+                        <td
+                          key={cell.id}
+                          className="px-6 py-3 whitespace-nowrap text-sm text-left text-text-dark"
+                        >
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>      
+          </div>
 
           <div className="flex items-center justify-center flex-col sm:flex-row sm:justify-between flex-wrap mt-4">
-              <div className="text-sm text-gray-700 mb-2 hidden sm:block">
+              <div className="text-sm text-text-secondary mb-2 hidden sm:block">
                 Showing <span className="font-semibold">{table.getFilteredRowModel().rows.length}</span> records
               </div>
 
               <div className="flex items-center gap-2 mb-2">
-                <button className='px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed' onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 0}>
+                <button className='px-3 py-1 border border-primary rounded-md text-sm font-medium text-primary bg-white hover:bg-primary hover:text-text-secondary disabled:opacity-50 disabled:cursor-not-allowed' onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 0}>
                   &laquo; 
                 </button>
 
@@ -267,30 +272,30 @@ function PrioritiesList() {
                     key={pageNumber}
                     onClick={() => {
                       setCurrentPage(pageNumber);
-                      fetchPriorities(pageNumber);
+                      fetchPhases(pageNumber);
                     }}
-                    className={`px-3 py-1 border border-gray-300 rounded-md text-sm font-medium ${currentPage === pageNumber ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                    className={`px-3 py-1 border border-primary rounded-md text-sm ${currentPage === pageNumber ? 'bg-primary text-text font-extrabold' : 'bg-white text-primary hover:bg-primary hover:text-text-secondary font-medium'}`}
                   >
                     {pageNumber + 1}
                   </button>
                 ))}
 
                 <button
-                  className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1 border border-primary rounded-md text-sm font-medium text-primary bg-white hover:bg-primary hover:text-text-secondary disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={() => goToPage(currentPage + 1)} disabled={currentPage >= totalPages - 1}>
                   &raquo;
                 </button>
               </div>
 
               {/* Current Page and Total Pages Info */}
-              <span className="text-sm text-gray-700 mb-2">
+              <span className="text-sm text-text-secondary mb-2">
                 Page{' '}
                 <span className="font-semibold">
                   {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
                 </span>
               </span>        
           </div>
-        </div>
+        </div> 
       )
       }
 

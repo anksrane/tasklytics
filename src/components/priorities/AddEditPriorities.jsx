@@ -86,7 +86,7 @@ function AddEditPriorities({ onClose, onPriorityAdded, priorityData, editingMode
       onClick={handleBackdropClick}
     >
       <div
-        className='bg-white w-96 h-fit flex flex-col p-4 cursor-auto'
+        className='bg-white sm:w-96 w-auto h-fit flex flex-col p-4 cursor-auto rounded-md'
         onClick={(e) => e.stopPropagation()}
       >
         <div className='flex justify-end mb-2'>
@@ -106,6 +106,8 @@ function AddEditPriorities({ onClose, onPriorityAdded, priorityData, editingMode
             <Input
               label="Priority Name"
               placeholder="Enter Priority Name"
+              labelClass='font-semibold mt-2'
+              className="py-1 px-2 text-sm"
               {...register("priorityName", { required: "Priority name is required" })}
               onChange={(e) => handlePriorityNameChange(e.target.value)}
               value={watch("priorityName") ?? ""}
@@ -115,25 +117,26 @@ function AddEditPriorities({ onClose, onPriorityAdded, priorityData, editingMode
             {/* Slug Input (readonly) */}
             <Input
               label="Slug"
+              labelClass='font-semibold mt-2'
+              className="py-1 px-2 text-sm"
               placeholder="Auto-generated Priority Name"
               {...register("priorityNameSlug")}
               disabled
-              className='text-gray-500'
             />
 
             {/* Color Picker */}
             <div className=''>
-              <label className="block">
+              <label className="block font-semibold mt-2 mb-1 pl-1">
                 Priority Color
               </label>
               <input
                 type="color"
+                className="w-full p-0 h-8 cursor-pointer"                
                 {...register("priorityColor", { required: "Color is required" })}
-                className="w-full h-8  rounded cursor-pointer"
                 defaultValue={editingMode && priorityData?.color ? priorityData.color : "#000000"}
               />
               {errors.priorityColor && (
-                <p className="text-red-500 text-xs mt-1">{errors.priorityColor.message}</p>
+                <p className="text-danger text-xs mt-1">{errors.priorityColor.message}</p>
               )}
             </div>            
 

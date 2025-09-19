@@ -1,0 +1,69 @@
+
+:root {
+  /* Base / Light Theme */
+  --background: #F9FAFB;        /* near white */
+  --surface: #FFFFFF;           /* cards, panels */
+  --overlay: #F3F4F6;           /* popup background */
+  
+  --primary: #FF6F61;           /* Coral */
+  --primary-hover: #E85A4F;
+  --secondary: #E65100;         /* Amber */
+  --secondary-hover: #BF4B00;
+  
+  --text: #111827;              /* Main text */
+  --text-secondary: #374151;    /* Labels, headings */
+  --text-muted: #6B7280;        /* placeholders, hints */
+  --text-light:#fff;
+  --text-black: #000;  
+
+  --table: #9c9c9c;
+  --table-medium:#bdbdbd;
+  --table-light:#d8d8d8;
+
+  --border: #D1D5DB;            /* neutral border */
+  --border-light: #E5E7EB;
+  
+  /* Semantic colors */
+  --danger: #DC2626;            /* red for errors / alerts */
+  --success: #16A34A;           /* green for success */
+  --disabled: #9CA3AF;          /* gray for disabled elements */
+  --active: #FF6F61;            /* same as primary for active states */
+  --inactive: #6B7280;          /* muted gray for inactive states */
+}
+
+.dark {
+  /* Base / Dark Theme */
+  --background: #001927;        
+  --surface: #112938;           
+  --overlay: #1b4a64;           
+  
+  /* --primary: #FF6F61;           
+  --primary-hover: #E85A4F;
+  --secondary: #FF9800;         
+  --secondary-hover: #FB8C00; */
+
+  --primary: #14B8A6; 
+  --primary-hover: #0D9488;
+  --secondary: #F59E0B;        
+  --secondary-hover: #D97706;
+  
+  --text: #001927;              
+  --text-secondary: #E0E6ED;    
+  --text-muted: #202227;    
+  --text-light:#fff;
+  --text-black: #000;
+
+  --table: #9c9c9c;
+  --table-medium:#bdbdbd;
+  --table-light:#d8d8d8;
+  
+  --border: #2C3E50;            
+  --border-light: #2C3A4A;      
+  
+  /* Semantic colors */
+  --danger: #ff0000;            
+  --success: #22C55E;           
+  --disabled: #c6ccd1;          
+  --active: #FF6F61;            
+  --inactive: #9AA5B1;          
+}

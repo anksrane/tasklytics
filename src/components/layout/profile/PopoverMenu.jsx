@@ -43,16 +43,16 @@ function PopoverMenu({isOpen,triggerRef}) {
     };    
 
   return (
-    <div ref={menuRef} className={isOpen ? 'absolute top-10 w-48 right-0 border border-brand-primary-900 bg-brand-neutral-100 shadow-lg rounded-md z-50' : 'hidden'}>
+    <div ref={menuRef} className={isOpen ? 'absolute top-12 w-48 right-2 border border-background bg-background-overlay text-text-secondary shadow-md rounded-md z-50' : 'hidden'}>
     <div className="absolute -top-2 right-2 w-0 h-0 
                 border-l-8 border-l-transparent 
                 border-r-8 border-r-transparent 
-                border-b-8 border-b-brand-neutral-100"></div>        
+                border-b-8 border-b-background-overlay"></div>        
       <ul>
-        <li className="px-4 py-2 rounded-tr-md rounded-tl-md hover:bg-neutral-500 cursor-pointer border-b-[1px]" onClick={() => gotoProfile()}
+        <li className="px-4 py-2 rounded-tr-md rounded-tl-md hover:bg-background-surface cursor-pointer border-b-[1px]" onClick={() => gotoProfile()}
             >Profile</li>
         {/* <li className="px-4 py-2 hover:bg-neutral-500 cursor-pointer border-b-[1px]">Change Password</li> */}
-        <li className="px-4 py-2 rounded-bl-md rounded-br-md hover:bg-neutral-500 cursor-pointer" onClick={handleLogout}>Logout</li>
+        <li className="px-4 py-2 rounded-bl-md rounded-br-md hover:bg-background-surface cursor-pointer" onClick={handleLogout}>Logout</li>
       </ul>
     </div>
   )

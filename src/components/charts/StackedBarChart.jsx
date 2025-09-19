@@ -25,16 +25,33 @@ function StackedBarChart({ data, masterData }) {
     return [header, ...rows];
   }, [data, masterData]);
 
-  const colors = masterData.map((item) => item.color || "#8884d8");
+  const colors = masterData.map((item) => item.color || getComputedStyle(document.documentElement).getPropertyValue("--primary").trim());
+
+  const isDark = document.body.classList.contains("dark");
+  const textColor = isDark ? "#FFFFFF" : "#000000"; 
+  const textSecondary = isDark ? "#D1D5DB" : "#374151";
 
   const options = {
+    backgroundColor: 'transparent',
     chartArea: { width: "70%", height: "70%" },
     isStacked: true,
-    hAxis: { title: "Tasks", minValue: 0 },
-    vAxis: { title: "Client" },
-    legend: { position: "bottom", textStyle: { fontSize: 14 } },
+    hAxis: { 
+      title: "Tasks", 
+      minValue: 0, 
+      textStyle: { color: textSecondary }, 
+      titleTextStyle: { color: textColor }
+    },
+    vAxis: { 
+      title: "Client", 
+      textStyle: { color: textSecondary }, 
+      titleTextStyle: { color: textColor }
+    },
+    legend: { 
+      position: "bottom", 
+      textStyle: { fontSize: 14, color: textColor } 
+    },    
     colors: colors,
-    annotations: { alwaysOutside: true, textStyle: { fontSize: 14, bold: true, color: "black" } },
+    annotations: { alwaysOutside: true, textStyle: { fontSize: 14, bold: true, color: textColor } },
   };
 
   return (

@@ -7,7 +7,7 @@ function Loader({
 }) {
   return (
     <div className={`flex items-center justify-center ${height? height : 'h-screen'}`}>
-      <AiOutlineLoading3Quarters className={`animate-spin text-4xl ${color? '': 'text-white'}`} />
+      <AiOutlineLoading3Quarters className={`animate-spin text-4xl ${color? {color}:'text-primary'}`} />
     </div>
   )
 }

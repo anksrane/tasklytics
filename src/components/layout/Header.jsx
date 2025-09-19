@@ -21,14 +21,14 @@ function Header() {
   };  
   return (
     <>
-      <div className='w-full py-3 px-4 flex items-center justify-between bg-transparent border-b bg-brand-primary-500'>
+      <div className='w-full px-4 flex items-center justify-between border-b bg-background'>
         <button className='z-10' onClick={()=>dispatch(toggleSidebar())} >
-          <GiHamburgerMenu className='text-brand-text-light text-2xl' />
+          <GiHamburgerMenu className='text-text-secondary text-2xl' />
         </button>
         <div className='relative flex'>
-          <div ref={triggerRef} className='flex items-center justify-between gap-2 cursor-pointer' onClick={handleUserMenuToggle}>
-            <span className='text-brand-text-light text-xl font-semibold'>{username}</span>
-            <FaUser className='text-brand-text-light text-3xl border border-brand-text-light p-[2px] rounded-[50%]'/>
+          <div ref={triggerRef} className='py-3 px-2 flex items-center justify-between gap-2 hover:bg-background-overlay cursor-pointer' onClick={handleUserMenuToggle}>
+            <span className='text-text-secondary text-xl font-semibold'>{username}</span>
+            <FaUser className='text-text-secondary text-3xl border border-brand-text-light p-[2px] rounded-[50%]'/>
           </div>
           <PopoverMenu isOpen={isUserMenuOpen} triggerRef={triggerRef} />
         </div>

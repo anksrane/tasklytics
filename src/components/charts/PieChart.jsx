@@ -6,11 +6,22 @@ function PieChart({ pieData, is3D = true, width = "100%", height = 200 }) {
     return <div className="text-center py-4">No data available</div>;
   }
 
+  const isDark = document.body.classList.contains("dark");
+  const textColor = isDark ? "#FFFFFF" : "#000000"; 
+  const textSecondary = isDark ? "#D1D5DB" : "#374151";   
+
   const options = {
     is3D: is3D,
+    backgroundColor: "transparent", // use transparent, chart sits on parent bg
     pieSliceText: "value",
-    legend: { position: "right", alignment: "center" },
-  };  
+    legend: { 
+      position: "right", 
+      alignment: "center",
+      textStyle: { color: textColor }
+    },
+    chartArea: { width: "90%", height: "80%" },
+    pieSliceTextStyle: { color: textSecondary }
+  };
   return (
     <div className="w-full">
       <Chart

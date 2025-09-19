@@ -82,11 +82,11 @@ function AddEditStatus({ onClose, onStatusAdded, statusData, editingMode }) {
   return (
     <div
       ref={backdropRef}
-      className='fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center cursor-pointer'
+      className='fixed inset-0 bg-black bg-opacity-50 z-20 flex justify-center items-center cursor-pointer rounded-md'
       onClick={handleBackdropClick}
     >
       <div
-        className='bg-white w-96 h-fit flex flex-col p-4 cursor-auto'
+        className='bg-white sm:w-96 w-auto h-fit flex flex-col p-4 cursor-auto rounded-md'
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()} 
       >
@@ -107,6 +107,8 @@ function AddEditStatus({ onClose, onStatusAdded, statusData, editingMode }) {
             <Input
               label="Status Name"
               placeholder="Enter Status Name"
+              labelClass='font-semibold mt-2'
+              className="py-1 px-2 text-sm"
               {...register("statusName", { required: "Status name is required" })}
               onChange={(e) => handleStatusNameChange(e.target.value)}
               value={watch("statusName") ?? ""}
@@ -116,21 +118,22 @@ function AddEditStatus({ onClose, onStatusAdded, statusData, editingMode }) {
             {/* Slug Input (readonly) */}
             <Input
               label="Slug"
+              labelClass='font-semibold mt-2'
+              className="py-1 px-2 text-sm"
               placeholder="Auto-generated Status Name"
               {...register("statusNameSlug")}
               disabled
-              className='text-gray-500'
             />
 
             {/* Color Picker */}
             <div className=''>
-              <label className="block">
+              <label className="block font-semibold mt-2 mb-1 pl-1">
                 Status Color
               </label>
               <input
                 type="color"
+                className="w-full p-0 h-8 cursor-pointer" 
                 {...register("statusColor", { required: "Color is required" })}
-                className="w-full h-8  rounded cursor-pointer"
                 defaultValue={editingMode && statusData?.color ? statusData.color : "#000000"}
               />
               {errors.statusColor && (

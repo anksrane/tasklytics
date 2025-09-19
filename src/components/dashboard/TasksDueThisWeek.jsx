@@ -44,8 +44,8 @@ export default function TasksDueThisWeek({
     <>
       {/* Table wrapper */}
       <div className={`relative rounded-lg border overflow-auto max-h-60 ${styles.scrollbar}`}>
-        <table className="min-w-full text-sm text-left rtl:text-right text-gray-500">
-          <thead className="sticky top-0 bg-gray-700 text-xs text-gray-100 uppercase z-10">
+        <table className="min-w-full text-sm text-left rtl:text-right text-text">
+          <thead className="sticky top-0 bg-primary text-xs text-text uppercase z-10">
             <tr>
               {columns.map((col) => (
                 <th key={col.key} scope="col" className="px-2 py-3 border">
@@ -56,11 +56,11 @@ export default function TasksDueThisWeek({
           </thead>
           <tbody>
             {tasks.map((task) => (
-              <tr key={task.id} className="border-b">
+              <tr key={task.id} className="border-b bg-table-light hover:bg-table">
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className={`px-2 py-3 ${col.key === "client" ? "font-medium text-gray-900 border" : "border"}`}
+                    className={`px-2 py-3 ${col.key === "client" ? "font-medium border" : "border"}`}
                   >
                     {col.key === "endDate"
                       ? formatDate(task[col.key]) // format date here

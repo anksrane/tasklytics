@@ -9,6 +9,7 @@ const Select = React.forwardRef(function Select({
   error = '', 
   labelVisible=true,
   showDefaultOption = true,
+  disabled=false,
   ...props
 }, ref) {
   const id = useId();
@@ -25,7 +26,9 @@ const Select = React.forwardRef(function Select({
       <select
         id={id}
         ref={ref}
-        className={`px-3 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border w-full ${error ? 'border-red-500' : 'border-gray-400'} ${className}`}
+        className={`rounded-md border text-text outline-none focus:shadow-md focus:border-primary hover:border-primary-hover w-full 
+          ${error ? 'border border-danger' : 'border border-border'} duration-200 w-full 
+          ${disabled ? 'bg-disabled text-text-muted cursor-not-allowed' : ''} ${className}`}
         {...props}
       >
         {/* Only add defaultOption if user hasn't provided their own placeholder */}

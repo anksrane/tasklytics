@@ -96,7 +96,7 @@ function ProfilePopup({isOpen}) {
         onMouseUp={handleMouseUp}
       >
         <div
-          className='bg-white w-auto h-fit flex flex-col p-4 cursor-auto'
+          className='bg-white sm:w-96 w-auto h-fit flex flex-col p-4 cursor-auto rounded-md'
           onMouseDown={(e) => e.stopPropagation()}
           onMouseUp={(e) => e.stopPropagation()}
         >
@@ -120,7 +120,7 @@ function ProfilePopup({isOpen}) {
                                       label="Name"
                                       placeholder="Enter Name"
                                       type="text"
-                                      className="py-1 text-sm"
+                                      className="py-1 px-2 text-sm"
                                       labelClass='font-semibold mt-2'
                                       disabled={!isEditing}
                                       {...register("name", {
@@ -141,7 +141,7 @@ function ProfilePopup({isOpen}) {
                                       label="Mobile Number"
                                       placeholder="Enter Mobile Number"
                                       type="text"
-                                      className="py-1 text-sm"
+                                      className="py-1 px-2 text-sm"
                                       labelClass='font-semibold mt-2'
                                       disabled={!isEditing}
                                       {...register("mobileNo", {
@@ -162,7 +162,7 @@ function ProfilePopup({isOpen}) {
                                       label="Role"
                                       placeholder="Enter Role"
                                       type="text"
-                                      className="py-1 text-sm"
+                                      className="py-1 px-2 text-sm"
                                       labelClass='font-semibold mt-2'
                                       disabled={true} 
                                       {...register("role", {
@@ -183,7 +183,7 @@ function ProfilePopup({isOpen}) {
                                       label="Email"
                                       placeholder="Enter Name"
                                       type="text"
-                                      className="py-1 text-sm"
+                                      className="py-1 px-2 text-sm"
                                       labelClass='font-semibold  mt-2'
                                       disabled={true}
                                       {...register("email", {
@@ -205,7 +205,7 @@ function ProfilePopup({isOpen}) {
                                           label="Manager Name"
                                           placeholder="Enter Manager Name"
                                           type="text"
-                                          className="py-1 text-sm"
+                                          className="py-1 px-2 text-sm"
                                           labelClass='font-semibold  mt-2'
                                           disabled={true} 
                                           {...register("managers", {

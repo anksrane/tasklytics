@@ -86,7 +86,7 @@ function AddEditPhase({ onClose, onPhaseAdded, phaseData, editingMode }) {
       onClick={handleBackdropClick}
     >
       <div
-        className='bg-white w-96 h-fit flex flex-col p-4 cursor-auto'
+        className='bg-white sm:w-96 w-auto h-fit flex flex-col p-4 cursor-auto rounded-md'
         onClick={(e) => e.stopPropagation()} 
       >
         <div className='flex justify-end mb-2'>
@@ -106,6 +106,8 @@ function AddEditPhase({ onClose, onPhaseAdded, phaseData, editingMode }) {
             <Input
               label="Phase Name"
               placeholder="Enter Phase Name"
+              labelClass='font-semibold mt-2'
+              className="py-1 px-2 text-sm"
               {...register("phaseName", { required: "Phase name is required" })}
               onChange={(e) => handlePhaseNameChange(e.target.value)}
               value={watch("phaseName") ?? ""}
@@ -115,25 +117,26 @@ function AddEditPhase({ onClose, onPhaseAdded, phaseData, editingMode }) {
             {/* Slug Input (readonly) */}
             <Input
               label="Slug"
+              labelClass='font-semibold mt-2'
+              className="py-1 px-2 text-sm"
               placeholder="Auto-generated Phase Name"
               {...register("phaseNameSlug")}
               disabled
-              className='text-gray-500'
             />
 
             {/* Color Picker */}
             <div className=''>
-              <label className="block">
+              <label className="block font-semibold mt-2 mb-1 pl-1">
                 Phase Color
               </label>
               <input
                 type="color"
+                className="w-full p-0 h-8 cursor-pointer"
                 {...register("phaseColor", { required: "Color is required" })}
-                className="w-full h-8  rounded cursor-pointer"
                 defaultValue={editingMode && phaseData?.color ? phaseData.color : "#000000"}
               />
               {errors.phaseColor && (
-                <p className="text-red-500 text-xs mt-1">{errors.phaseColor.message}</p>
+                <p className="text-danger text-xs mt-1">{errors.phaseColor.message}</p>
               )}
             </div>            
 

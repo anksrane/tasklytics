@@ -33,9 +33,9 @@ function ConfirmDeleteModal({onClose, onTaskAdded, deleteData}) {
   return (
       <div ref={backdropRef} className='absolute bg-black bg-opacity-50 z-20 w-full h-full cursor-pointer flex items-center justify-center' onClick={handleBackdropClick}>
         <div className='bg-white h-auto w-96 p-4 overflow-y-auto cursor-auto' onClick={(e) => e.stopPropagation()}  >
-          <IoIosWarning className='text-5xl m-auto mb-4 text-red-500' />
-          <p className={`text-center mb-3 text-gray-800`}>This action cannot be undone.</p>
-          <p className={`text-center mb-3 text-gray-900`}>Are you sure you want to permanently delete this task?</p>
+          <IoIosWarning className='text-5xl m-auto mb-4 text-danger' />
+          <p className={`text-center mb-1 text`}>This action cannot be undone.</p>
+          <p className={`text-center mb-3 text`}>Are you sure you want to permanently delete this task?</p>
           <div className='flex items-center justify-center gap-1'>
             <Button type="submit" variant='danger' className='py-1 text-sm font-bold' onClick={()=>handleDelete(deleteData)}>Delete</Button>
             <Button type="submit" variant='outline' className='py-1 text-sm font-bold' onClick={onClose}>Cancel</Button>

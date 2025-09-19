@@ -60,7 +60,7 @@ function DeletePriorities({onClose, priorityData, onPriorityDeleted}) {
           <div className='bg-white w-auto min-w-96 h-fit flex flex-col p-4 cursor-auto' 
           onClick={(e) => e.stopPropagation()} 
           >
-            <IoIosWarning className='text-5xl m-auto mb-4 text-red-500' />
+            <IoIosWarning className='text-5xl m-auto mb-4 text-danger' />
             {
               loading ? (
                 <div className="flex justify-center items-center h-20">
@@ -70,16 +70,16 @@ function DeletePriorities({onClose, priorityData, onPriorityDeleted}) {
               :(
                   tasks.length>0 ? (
                     <>
-                      <p className={`text-center mb-1 text-gray-800`}>This priority cannot be deleted because there are <strong>{tasks.length}</strong> active tasks linked to <strong>{priorityData.label}</strong>.</p>
-                      <p className={`text-center mb-3 text-gray-800`}>Please reassign or remove those tasks before deleting.</p>
+                      <p className={`text-center mb-1 text-dark`}>This priority cannot be deleted because there are <strong>{tasks.length}</strong> active tasks linked to <strong>{priorityData.label}</strong>.</p>
+                      <p className={`text-center mb-3 text-dark`}>Please reassign or remove those tasks before deleting.</p>
                       <div className='flex items-center justify-center gap-1'>
                         <Button type="submit" variant='outline' className='py-1 text-sm font-bold' onClick={onClose}>Cancel</Button>
                       </div>
                     </>
                   ):(
                     <>
-                      <p className={`text-center mb-1 text-gray-800`}>Are you sure you want to delete <strong>{priorityData.label}</strong>?</p>
-                      <p className={`text-center mb-3 text-red-500`}>This action cannot be undone.</p>
+                      <p className={`text-center mb-1 text-dark`}>Are you sure you want to delete <strong>{priorityData.label}</strong>?</p>
+                      <p className={`text-center mb-3 text-danger`}>This action cannot be undone.</p>
                       <div className='flex items-center justify-center gap-1'>
                         <Button type="submit" variant='danger' className='py-1 text-sm font-bold' onClick={()=>{handleDelete(priorityData)}}>Delete</Button>
                         <Button type="submit" variant='outline' className='py-1 text-sm font-bold' onClick={onClose}>Cancel</Button>

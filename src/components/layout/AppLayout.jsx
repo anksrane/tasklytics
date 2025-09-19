@@ -20,7 +20,7 @@ function AppLayout() {
                 <div className='flex flex-col flex-1 overflow-hidden'>
                     <Header toggleSidebar={handleToggleSidebar}/>
                     <main className=' flex-1 overflow-y-auto relative'>
-                        <div className='bg-white min-h-full h-fit w-full'> 
+                        <div className='bg-background min-h-full h-fit w-full'> 
                             <Outlet/>
                         </div>
                     </main>

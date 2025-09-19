@@ -37,14 +37,13 @@ function Login() {
     };
     return (
         <div className='relative flex items-center justify-center h-screen w-screen overflow-hidden p-1 md:p-0'>
-            {/* 🔹 Background Boxes */}
 
-            <div className="relative z-30 w-full max-w-4xl shadow-md rounded-md flex">
-                <div className='bg-gray-600 hidden md:block md:w-1/2'>
-                    <img src={img} alt="Banne Image" />
+            <div className="relative z-30 w-full max-w-4xl md:shadow-md rounded-md border border-secondary flex">
+                <div className='hidden md:block md:w-1/2'>
+                    <img src={img} alt="Banne Image" className='rounded-tl-md rounded-bl-md' />
                 </div>
-                <div className='bg-white md:p-8 px-5 py-8 md:w-1/2 m-auto md:m-0 flex flex-col justify-center'>
-                    <h2 className="text-3xl font-bold mb-8 text-center">Login to<span className='font-[900] bg-gradient-to-r from-[#004643] via-[#5E8677] to-[#004643] 
+                <div className='bg-background-surface md:p-8 px-5 py-8 md:w-1/2 m-auto md:m-0 flex flex-col justify-center md:rounded-tr-md md:rounded-br-md md:rounded-none rounded-md'>
+                    <h2 className="text-3xl font-bold mb-8 text-center text-primary">Login to<span className='font-[900] bg-gradient-to-r from-primary via-secondary to-primary
                     bg-clip-text text-transparent 
                     bg-[length:200%_100%] animate-gradient-x'> Tasklytics</span>
                         </h2>
@@ -53,7 +52,7 @@ function Login() {
                             label="Email: "
                             placeholder="Enter your Email"
                             type="email"
-                            className="py-2"
+                            className="p-2"
                             {...register("email", {
                                 required: "Email is Required",
                                 pattern: {
@@ -67,7 +66,7 @@ function Login() {
                             label="Password: "
                             placeholder="Enter your Password"
                             type="password"
-                            className="py-2"
+                            className="p-2"
                             {...register("password", {
                                 required: "Password is Required",
                                 minLength:  {
@@ -82,7 +81,7 @@ function Login() {
                             variant='primary' className='w-full py-2'
                             isLoading={isSubmitting}>Login</Button>
                             <Button type="reset" 
-                            variant='danger' className='w-full py-2'
+                            variant='secondaryOutline' className='w-full py-2'
                             onClick={()=>reset()}>Reset</Button>
                         </div>
                         {error && (

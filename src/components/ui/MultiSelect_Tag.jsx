@@ -87,20 +87,21 @@ const MultiSelect_Tag = forwardRef(function MultiSelect_Tag(
         <label
           className={`${
             labelVisible ? "inline-block" : "hidden"
-          } mb-1 pl-1 text-black ${labelClass}`}
+          } mb-1 pl-1 text-text ${labelClass}`}
         >
           {label}
         </label>
       )}
-      <div className={`flex align-center rounded-lg bg-white border ${error ? 'border-red-500' : 'border-gray-400'}`}>
+      <div className={`flex align-center rounded-md bg-white border border-background outline-none focus:shadow-md focus:border-primary hover:border-primary-hover
+         ${error ? 'border-danger' : 'border-gray-400'}`}>
         <div
-          className={`px-3 bg-transparent rounded-lg text-black w-full cursor-pointer flex ${className}`}
+          className={`py-1 px-2 bg-transparent rounded-md text-text w-full cursor-pointer flex ${className}`}
           onClick={() => setShowOptions((prev) => !prev)}
         >
           {selected.length > 0 ? selectedLabels.join(", ") : placeholder}
         </div>
         <button
-          className="text-sm w-fit font-bold p-1 bg-red-500 w-100 rounded-e text-white hover:underline"
+          className="p-1 text-sm w-fit font-bold bg-danger w-100 rounded-e text-white hover:underline"
           onClick={clearSelection}
           type="button"
         >
@@ -118,7 +119,7 @@ const MultiSelect_Tag = forwardRef(function MultiSelect_Tag(
       </div>
 
       {showOptions && (
-        <div className="border rounded-lg shadow-md bg-white z-10 w-full max-h-60 overflow-y-auto">
+        <div className="border border-background rounded-md shadow-md bg-white z-10 w-full max-h-60 overflow-y-auto">
           <div className="p-2 border-b">
             <input
               type="text"
@@ -154,7 +155,7 @@ const MultiSelect_Tag = forwardRef(function MultiSelect_Tag(
           </ul>
         </div>
       )}
-      {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
+      {error && <p className="text-sm text-danger mt-1">{error}</p>}
     </div>
   );
 });

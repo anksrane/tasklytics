@@ -34,9 +34,9 @@ function RestoreTrashModal({onClose, onTaskAdded, restoreData}) {
   return (
       <div ref={backdropRef} className='absolute bg-black bg-opacity-50 z-20 w-full h-full cursor-pointer flex items-center justify-center' onClick={handleBackdropClick}>
         <div className='bg-white h-auto w-96 p-4 overflow-y-auto cursor-auto' onClick={(e) => e.stopPropagation()}  >
-          <IoIosWarning className='text-5xl m-auto mb-4 text-red-500' />
-          <p className={`text-center mb-3 text-gray-800`}>Are you sure you want to restore this task?</p>
-          <p className={`text-center mb-3 text-gray-900`}>It will be moved back to the active tasks list.</p>
+          <IoIosWarning className='text-5xl m-auto mb-4 text-danger' />
+          <p className={`text-center mb-3 text`}>Are you sure you want to restore this task?</p>
+          <p className={`text-center mb-3 text`}>It will be moved back to the active tasks list.</p>
           <div className='flex items-center justify-center gap-1'>
             <Button type="submit" variant='danger' className='py-1 text-sm font-bold' onClick={()=>restoreTrashTask(restoreData)}>Restore</Button>
             <Button type="submit" variant='outline' className='py-1 text-sm font-bold' onClick={onClose}>Cancel</Button>

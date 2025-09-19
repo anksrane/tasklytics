@@ -248,32 +248,32 @@ function Dashboard() {
     return (
         <>
         <div className="mx-auto p-4 z-10">
-            <h2 className="text-2xl font-bold mb-4 text-center">Dashboard</h2>
+            <h2 className="text-2xl font-bold mb-4 text-center text-text-secondary">Dashboard</h2>
             {/* Task Count Section */}
             <div className='grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 lg:gap-4 gap-2 rounded-lg'>
                 <CountCard title="Completed Tasks" 
                     count={counts.completed} 
-                    icon={<FaCheck className="text-green-500 text-3xl" />}
+                    icon={<FaCheck className="text-success text-3xl" />}
                   />
                 <CountCard title="Pending Tasks" 
                     count={counts.pending} 
-                    icon={<FaStopwatch className="text-yellow-400 text-3xl" />}
+                    icon={<FaStopwatch className="text-secondary text-3xl" />}
                   />
                 <CountCard title="Overdue Tasks" 
                     count={counts.overdue} 
-                    icon={<MdLocalFireDepartment className="text-red-700 text-3xl" />}
+                    icon={<MdLocalFireDepartment className="text-danger text-3xl" />}
                   />
                 <CountCard title="Active Tasks" 
                     count={counts.active} 
-                    icon={<IoMdRocket className="text-green-500 text-3xl" />}
+                    icon={<IoMdRocket className="text-success text-3xl" />}
                   />
             </div>
 
             <div className='lg:my-4 my-2 rounded-lg flex lg:flex-row flex-col lg:gap-4 gap-2'>
                 {/* BarChart Dropdown */}
-                <div className="bg-white border border-dotted border-brand-primary-900 p-4 rounded-lg lg:w-1/2 w-full">
+                <div className="bg-background-surface shadow-md p-4 rounded-lg lg:w-1/2 w-full">
                     <div className="flex gap-2 align-center justify-between">
-                        <h3 className="text-lg font-semibold mb-4">{chartTitle}</h3>
+                        <h3 className="text-lg font-semibold mb-4 text-text-secondary">{chartTitle}</h3>
                         <Select 
                             labelVisible={false}
                             // defaultValue="status"
@@ -293,16 +293,16 @@ function Dashboard() {
                     ) : barChartData && barChartData.length > 0 ? (
                     <StackedBarChart data={barChartData} masterData={masterData} />
                     ) : (
-                    <div className="text-center text-brand-primary-dark py-6 max-h-60">
+                    <div className="text-center text-primary py-6 max-h-60">
                         No data available
                     </div>
                     )}              
                 </div>    
 
                 {/* Tasks By Team */}
-                <div className="bg-white border border-dotted border-brand-primary-900 p-4 rounded-lg lg:w-1/2 w-full">
+                <div className="bg-background-surface shadow-md  p-4 rounded-lg lg:w-1/2 w-full">
                     <div className="flex gap-2 align-center justify-between">
-                        <h3 className="text-lg font-semibold mb-4">
+                        <h3 className="text-lg font-semibold mb-4 text-text-secondary">
                             {user.userRole === "Admin"
                                 ? pieViewType === "team"
                                 ? "Tasks By Team"
@@ -327,7 +327,7 @@ function Dashboard() {
                         ) : pieDataForChart && pieDataForChart.length>0 ? (
                         <PieChart pieData={pieDataForChart} is3D={false} height={300} />
                         ) : (
-                            <div className="text-center text-brand-primary-dark font-bold py-6 max-h-60">
+                            <div className="text-center text-primary font-bold py-6 max-h-60">
                                 No data available
                             </div>                           
                         )
@@ -338,15 +338,15 @@ function Dashboard() {
             <div className='lg:my-4 my-2 rounded-lg flex lg:flex-row flex-col lg:gap-4 gap-2'>
                 
                 {/* Task Due By This Week */}
-                <div className="bg-white border border-dotted border-brand-primary-900 p-4 rounded-lg lg:w-1/2 w-full">
+                <div className="bg-background-surface shadow-md  p-4 rounded-lg lg:w-1/2 w-full">
                     <div className="flex gap-2 align-center justify-between">
-                        <h3 className="text-lg font-semibold mb-4">Tasks Due This Week</h3>
+                        <h3 className="text-lg font-semibold mb-4 text-text-secondary">Tasks Due This Week</h3>
                     </div>                
                     {taskDueLoading ? 
                         (<TasksDueThisWeekSkeleton rows={4} columns={3} /> )
                         : tasksDueThisWeek && tasksDueThisWeek.length>0 ? (<TasksDueThisWeek tasks={tasksDueThisWeek} />)
                         : (
-                            <div className="text-center text-brand-primary-dark py-6 max-h-60">
+                            <div className="text-center text-primary py-6 max-h-60">
                                 No data available
                             </div>                            
                         )
@@ -354,15 +354,15 @@ function Dashboard() {
                 </div>      
 
                 {/* Task Overdue */}
-                <div className="bg-white border border-dotted border-brand-primary-900 p-4 rounded-lg lg:w-1/2 w-full">
+                <div className="bg-background-surface shadow-md  p-4 rounded-lg lg:w-1/2 w-full">
                     <div className="flex gap-2 align-center justify-between">
-                        <h3 className="text-lg font-semibold mb-4">Tasks Overdue</h3>
+                        <h3 className="text-lg font-semibold mb-4 text-text-secondary">Tasks Overdue</h3>
                     </div>                
                     {taskDueLoading ? 
                         (<TasksDueThisWeekSkeleton rows={4} columns={3} /> )
                         : tasksOverdue && tasksOverdue.length>0 ? (<TasksDueThisWeek tasks={tasksOverdue} />)
                         : (
-                            <div className="text-center text-brand-primary-dark py-6 max-h-60">
+                            <div className="text-center text-primary py-6 max-h-60">
                                 No data available
                             </div>                            
                         )

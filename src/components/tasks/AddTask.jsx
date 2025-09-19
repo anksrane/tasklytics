@@ -241,9 +241,9 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
           onClick={(e) => e.stopPropagation()} 
         >
           <div className='flex justify-end mb-2'>
-            <button onClick={onClose}><IoMdCloseCircle className='text-2xl'/></button>
+            <button onClick={onClose}><IoMdCloseCircle className='text-2xl text-dark'/></button>
           </div>
-          <h2 className="text-2xl font-bold mb-4 text-center">{editingMode?"Edit Task" : "Add Task"}</h2>
+          <h2 className="text-2xl font-bold mb-4 text-center text-dark">{editingMode?"Edit Task" : "Add Task"}</h2>
 
           {loading?(
             <>
@@ -260,7 +260,7 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                     <Select 
                       label="Client Name"
                       defaultOption= "Select Client"
-                      className="py-1 text-sm"
+                      className="py-1 px-2 text-sm"
                       labelClass='font-semibold mt-2'
                       options={clientOptions}
                       // defaultValue={watch("client") || ""}
@@ -279,8 +279,8 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                         label="Task Title"
                         placeholder="Enter Task Title"
                         type="text"
-                        className="py-1 text-sm"
-                        labelClass='font-semibold  mt-2'
+                        className="py-1 px-2 text-sm"
+                        labelClass='font-semibold mt-2 text-black'
                         {...register("title", {
                             required: "Title is Required",
                             pattern: {
@@ -299,7 +299,7 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                         label="Task Description"
                         placeholder="Enter Task Description"
                         isTextarea = {true}
-                        className="py-1 text-sm"
+                        className="py-1 px-2 text-sm"
                         labelClass='font-semibold mt-2'
                         {...register("description", {
                             required: "Description is Required",
@@ -316,7 +316,7 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                 {/* Priority Input Start */}
                   <div className="w-full">
                     <Select 
-                    className="py-1 text-sm"
+                    className="py-1 px-2 text-sm"
                     label="Task Priority"
                     defaultOption= "Select Priority"
                     labelClass='font-semibold mt-2'
@@ -334,7 +334,7 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                     <Select 
                       label="Task Phase"
                       defaultOption= "Select Phase"
-                      className="py-1 text-sm"
+                      className="py-1 px-2 text-sm"
                       labelClass='font-semibold mt-2'
                       options={taskPhasesOptions}
                       {...register("taskPhase",{
@@ -348,7 +348,7 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                 {/* Task Status Input Start */}
                   <div className="w-full">
                     <Select 
-                    className="py-1 text-sm"
+                    className="py-1 px-2 text-sm"
                     label="Task Status"
                     defaultOption= "Select Status"
                     labelClass='font-semibold mt-2'
@@ -367,7 +367,7 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                       <DatePicker
                         label="Task Start Date"
                         labelClass='font-semibold mt-2'
-                        className="py-1 text-sm"
+                        className="py-1 px-2 text-sm"
                         {...register("startDate",{
                           required:"Please Select Start Date"
                         })}
@@ -379,7 +379,7 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                       <DatePicker
                         label="Task End Date"
                         labelClass='font-semibold mt-2'
-                        className="py-1 text-sm"
+                        className="py-1 px-2 text-sm"
                         disabled={!startDateValue}
                         placeholder={!startDateValue ? "Please select Start Date first" : ""}
                         min={startDateValue}
@@ -419,7 +419,7 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                 {/* assignedCoderNames Input End */}   
 
                 <div className='flex items-center justify-center gap-2 mt-3'>
-                    <Button type="submit" variant='primary' className='py-2 text-sm' isLoading={isSubmitting}>
+                    <Button type="submit" variant='primary' className='text-sm' isLoading={isSubmitting}>
                       {isSubmitting ? 'Submitting...' : editingMode ? 'Update Task' : 'Create Task'}
                     </Button>
                     <Button type="reset" variant='danger' className='py-2 text-sm' onClick={()=>reset()}>Reset</Button>

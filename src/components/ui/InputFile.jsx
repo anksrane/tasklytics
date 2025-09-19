@@ -7,6 +7,7 @@ const InputFile = React.forwardRef(function InputFile({
   accept = '',
   multiple = false,
   error = '',
+  disabled=false,
   ...props
 }, ref) {
   const id = useId();
@@ -20,7 +21,9 @@ const InputFile = React.forwardRef(function InputFile({
       )}
       <input
         type="file"
-        className={`px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border w-full ${error ? 'border-red-500' : 'border-gray-400'} ${className}`} // ✨ changed
+        className={`px-3 py-2 rounded-md text-text outline-none focus:shadow-md focus:border-primary hover:border-primary-hover 
+        ${error ? 'border border-danger' : 'border border-border'} duration-200 w-full 
+        ${disabled ? 'bg-disabled text-text-muted cursor-not-allowed' : ''} ${className}`}
         name={name}
         ref={ref}
         id={id}
