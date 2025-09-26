@@ -23,7 +23,7 @@ export const getPhasesWithFilter = async ({ page, pageSize, search }) => {
     // server-side pagination simulation
     const startIndex = (page - 1) * pageSize;
     const paginatedData = phases.slice(startIndex, startIndex + pageSize);
-    let totalPages=Math.ceil(phases.length / 10);
+    let totalPages=Math.ceil(phases.length / pageSize);
 
     return { success: true, data: paginatedData, totalPages:totalPages };
   } catch (error) {

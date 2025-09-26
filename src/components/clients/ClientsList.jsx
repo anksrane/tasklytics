@@ -116,7 +116,7 @@ function ClientsList() {
 
   useEffect(() => {
     fetchClients(currentPage); // fetch first page on mount
-  }, [currentPage, appliedSearchText]);  
+  }, [currentPage, appliedSearchText,fetchClients,totalPages]);  
 
   // TanStack Table instance
   const table = useReactTable({
@@ -247,7 +247,7 @@ function ClientsList() {
                     key={pageNumber}
                     onClick={() => {
                       setCurrentPage(pageNumber);
-                      fetchPhases(pageNumber);
+                      fetchClients(pageNumber);
                     }}
                     className={`px-3 py-1 border border-primary rounded-md text-sm ${currentPage === pageNumber ? 'bg-primary text-text font-extrabold' : 'bg-white text-primary hover:bg-primary hover:text-text-secondary font-medium'}`}
                   >

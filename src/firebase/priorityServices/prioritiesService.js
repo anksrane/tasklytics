@@ -23,7 +23,7 @@ export const getPrioritiesWithFilter = async ({ page, pageSize, search }) => {
     // server-side pagination simulation
     const startIndex = (page - 1) * pageSize;
     const paginatedData = priorities.slice(startIndex, startIndex + pageSize);
-    let totalPages=Math.ceil(priorities.length / 10);
+    let totalPages=Math.ceil(priorities.length / pageSize);
 
     return { success: true, data: paginatedData, totalPages:totalPages };
   } catch (error) {

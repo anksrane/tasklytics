@@ -23,7 +23,7 @@ export const getStatusesWithFilter = async ({ page, pageSize, search }) => {
     // server-side pagination simulation
     const startIndex = (page - 1) * pageSize;
     const paginatedData = statuses.slice(startIndex, startIndex + pageSize);
-    let totalPages=Math.ceil(statuses.length / 10);
+    let totalPages=Math.ceil(statuses.length / pageSize);
 
     return { success: true, data: paginatedData, totalPages:totalPages };
   } catch (error) {
