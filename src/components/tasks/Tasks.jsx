@@ -61,7 +61,7 @@ function Tasks() {
     const [sorting,setSorting]=useState([]);
     const [globalFilter,setGlobalFilter]=useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize] = useState(5); 
+    const [pageSize] = useState(10); 
     const [searchText,setSearchText]=useState('');
     const [appliedSearchText, setAppliedSearchText] = useState('');
     const [hasMorePages, setHasMorePages] = useState(false);
@@ -135,19 +135,19 @@ function Tasks() {
         columnHelper.accessor('',{
             header: 'Sr No',
             cell: info => (currentPage - 1) * pageSize + info.row.index + 1,
-            enableSorting: true,
+            enableSorting: false,
             enableGlobalFilter: true
         }),      
         columnHelper.accessor('serialNo',{
             header: 'Task No',
             cell: info => info.getValue(),
-            enableSorting: true,
+            enableSorting: false,
             enableGlobalFilter: true
         }),      
         columnHelper.accessor('clientLabel',{
             header: 'client',
             cell: info => info.getValue(),
-            enableSorting: true,
+            enableSorting: false,
             enableGlobalFilter: true
         }),      
         columnHelper.accessor('title',{
@@ -159,13 +159,13 @@ function Tasks() {
         columnHelper.accessor('taskStatusLabel',{
             header: 'Status',
             cell: info => info.getValue(),
-            enableSorting: true,
+            enableSorting: false,
             enableGlobalFilter: true
         }),
         columnHelper.accessor('taskPhaseLabel',{
             header: 'Phase',
             cell: info => info.getValue(),
-            enableSorting: true,
+            enableSorting: false,
             enableGlobalFilter: true
         }),
         columnHelper.accessor('priorityLabel',{
@@ -193,19 +193,19 @@ function Tasks() {
                       </span>
                   );
             },
-            enableSorting: true,
+            enableSorting: false,
             enableGlobalFilter: true
         }),
         columnHelper.accessor('startDate',{
             header: 'Start Date',
             cell: info => formatDate(info.getValue()),
-            enableSorting: true,
+            enableSorting: false,
             enableGlobalFilter: true
         }),
         columnHelper.accessor('endDate',{
             header: 'Due Date',
             cell: info => formatDate(info.getValue()),
-            enableSorting: true,
+            enableSorting: false,
             enableGlobalFilter: true
         }),
         // You can add more columns here, e.g., for actions like 'Edit', 'Delete'
@@ -425,21 +425,10 @@ function Tasks() {
                       <th
                         key={header.id}
                         scope="col"
-                        className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider select-none ${header.column.getCanSort()? 'cursor-pointer' : ''}`}
-                        // Add onClick handler for sorting if the column is sortable
-                        onClick={header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
+                        className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider select-none`}
                       >
                         <div className="flex items-center gap-1">
                           {flexRender(header.column.columnDef.header, header.getContext())}
-                          {/* Sort indicator */}
-                          {header.column.getCanSort() && (
-                            <span>
-                              {{
-                                asc: ' 🔼', 
-                                desc: ' 🔽', 
-                              }[header.column.getIsSorted()] ?? null}
-                            </span>
-                          )}
                         </div>
                       </th>
                     ))}
@@ -475,57 +464,60 @@ function Tasks() {
           </div>  
 
           {/* Pagination Controls */}
-          <div className="flex items-center justify-center flex-col sm:flex-row sm:justify-between flex-wrap mt-4">
-            <div className="text-sm text-text-secondary mb-2 hidden sm:block">
-              Showing <span className="font-semibold">{table.getFilteredRowModel().rows.length}</span> records
-            </div>
+          {pageNumbers.length!==0?
+            <div className="flex items-center justify-center flex-col sm:flex-row sm:justify-between flex-wrap mt-4">
+              <div className="text-sm text-text-secondary mb-2 hidden sm:block">
+                Showing <span className="font-semibold">{table.getFilteredRowModel().rows.length}</span> records
+              </div>
 
-            <div className="flex items-center gap-2 mb-2">
-              {/* Previous Button */}
-              <button
-                className="px-3 py-1 border border-primary rounded-md text-sm font-medium text-primary bg-white hover:bg-primary hover:text-text-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}            
-                disabled={currentPage === 1}
-              >
-                &laquo;
-              </button>
+              <div className="flex items-center gap-2 mb-2">
+                {/* Previous Button */}
+                <button
+                  className="px-3 py-1 border border-primary rounded-md text-sm font-medium text-primary bg-white hover:bg-primary hover:text-text-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}            
+                  disabled={currentPage === 1}
+                >
+                  &laquo;
+                </button>
 
-              {/* Page Numbers */}
-              {pageNumbers.map((pageNumber, index) => (
-                <React.Fragment key={index}> {/* Use index for keys for ellipses */}
-                  {typeof pageNumber == 'number' ? (
-                    <button
-                      onClick={() => {
-                        setCurrentPage(pageNumber);
-                      }}
-                      className={`px-3 py-1 border border-primary rounded-md text-sm ${currentPage === pageNumber ? 'bg-primary text-text font-extrabold' : 'bg-white text-primary hover:bg-primary hover:text-text-secondary font-medium' }`} >
-                      {pageNumber} {/* Display 1-indexed page number */}
-                    </button>
-                  ) : (
-                    <span className="px-3 py-1 text-gray-700">...</span>
-                  )}
-                </React.Fragment>
-              ))}
+                {/* Page Numbers */}
+                {pageNumbers.map((pageNumber, index) => (
+                  <React.Fragment key={index}> {/* Use index for keys for ellipses */}
+                    {typeof pageNumber == 'number' ? (
+                      <button
+                        onClick={() => {
+                          setCurrentPage(pageNumber);
+                        }}
+                        className={`px-3 py-1 border border-primary rounded-md text-sm ${currentPage === pageNumber ? 'bg-primary text-text font-extrabold' : 'bg-white text-primary hover:bg-primary hover:text-text-secondary font-medium' }`} >
+                        {pageNumber} {/* Display 1-indexed page number */}
+                      </button>
+                    ) : (
+                      <span className="px-3 py-1 text-gray-700">...</span>
+                    )}
+                  </React.Fragment>
+                ))}
 
-              <button
-                // onClick={() => table.nextPage()}
-                onClick={() => setCurrentPage(p => Math.min(p + 1, Math.ceil(totalTasks / pageSize)))}
-                disabled={currentPage >= Math.ceil(totalTasks / pageSize)}
-                className="px-3 py-1 border border-primary rounded-md text-sm font-medium text-primary bg-white hover:bg-primary hover:text-text-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                &raquo;
-              </button>
-            </div>
+                <button
+                  // onClick={() => table.nextPage()}
+                  onClick={() => setCurrentPage(p => Math.min(p + 1, Math.ceil(totalTasks / pageSize)))}
+                  disabled={currentPage >= Math.ceil(totalTasks / pageSize)}
+                  className="px-3 py-1 border border-primary rounded-md text-sm font-medium text-primary bg-white hover:bg-primary hover:text-text-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  &raquo;
+                </button>
+              </div>
 
-            {/* Current Page and Total Pages Info */}
-            <span className="text-sm text-text-secondary mb-2">
-              Page{' '}
-              <span className="font-semibold">
-                {/* {table.getState().pagination.pageIndex + 1} of {table.getPageCount()} */}
-                {currentPage} of {Math.ceil(totalTasks / pageSize)}
+              {/* Current Page and Total Pages Info */}
+              <span className="text-sm text-text-secondary mb-2">
+                Page{' '}
+                <span className="font-semibold">
+                  {/* {table.getState().pagination.pageIndex + 1} of {table.getPageCount()} */}
+                  {currentPage} of {Math.ceil(totalTasks / pageSize)}
+                </span>
               </span>
-            </span>
-          </div>              
+            </div>   
+          :<div></div>          
+          }           
         </div>            
         )}        
       </div>

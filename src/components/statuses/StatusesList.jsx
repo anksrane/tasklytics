@@ -65,7 +65,7 @@ function StatusesList() {
     columnHelper.accessor('label', {
       header: 'Statuses Name',
       cell: info => info.getValue(),
-      enableSorting: true,
+      enableSorting: false,
     }),
     columnHelper.accessor('color', {
       header: 'Color',
@@ -81,7 +81,7 @@ function StatusesList() {
           </div>
         );
       },
-      enableSorting: true,
+      enableSorting: false,
     }),
     columnHelper.display({
         id: 'actions',
@@ -212,20 +212,10 @@ function StatusesList() {
                         className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider select-none 
                           ${header.id === "serialNo" ? "w-[10%]" : ""} 
                           ${header.id === "label" ? "w-[75%]" : ""} 
-                          ${header.id === "actions" ? "w-[15%]" : ""} 
-                          ${header.column.getCanSort() ? "cursor-pointer" : ""}`}
-                        onClick={header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
+                          ${header.id === "actions" ? "w-[15%]" : ""} `}
                       >
                         <div className={`flex items-center gap-1 ${header.id === "actions" ? "justify-center" : ""}`}>
                           {flexRender(header.column.columnDef.header, header.getContext())}
-                          {header.column.getCanSort() && (
-                            <span>
-                              {{
-                                asc: ' 🔼', 
-                                desc: ' 🔽', 
-                              }[header.column.getIsSorted()] ?? null}
-                            </span>
-                          )}
                         </div>
                       </th>
                     ))}

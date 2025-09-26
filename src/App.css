@@ -39,15 +39,15 @@
   /* Base / Dark Theme */
   --background: #001927;        
   --surface: #112938;           
-  --overlay: #003653;  
+  --overlay: #1b4a64;  
 
   --header: #001927;  
   --sidebar: #001927;        
 
   --primary: #14B8A6; 
   --primary-hover: #0D9488;
-  --secondary: #cc8101;        
-  --secondary-hover: #cc8101;
+  --secondary: #F59E0B;        
+  --secondary-hover: #D97706;
   
   --text: #001927;              
   --text-secondary: #E0E6ED;    

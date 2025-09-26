@@ -65,7 +65,7 @@ function ClientsList() {
     columnHelper.accessor('label', {
       header: 'Client Name',
       cell: info => info.getValue(),
-      enableSorting: true,
+      enableSorting: false,
     }),
     columnHelper.display({
         id: 'actions',
@@ -198,18 +198,9 @@ function ClientsList() {
                           ${header.id === "label" ? "w-[75%]" : ""} 
                           ${header.id === "actions" ? "w-[15%]" : ""} 
                           ${header.column.getCanSort() ? "cursor-pointer" : ""}`}
-                        onClick={header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
                       >
                         <div className={`flex items-center gap-1 ${header.id === "actions" ? "justify-center" : ""}`}>
                           {flexRender(header.column.columnDef.header, header.getContext())}
-                          {header.column.getCanSort() && (
-                            <span>
-                              {{
-                                asc: ' 🔼', 
-                                desc: ' 🔽', 
-                              }[header.column.getIsSorted()] ?? null}
-                            </span>
-                          )}
                         </div>
                       </th>
                     ))}
