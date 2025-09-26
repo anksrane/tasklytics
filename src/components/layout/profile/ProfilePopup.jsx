@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { Input, ButtonWithIcon, Button } from "../../index";
 import { FaPenToSquare, FaEye } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
-import profileDummy from '../../../assets/profile-icon.png';
 import { setIsProfilePopupOpen } from '../../../features/ui/profilePopupSlice';
 import { updateProfileFirebase } from '../../../firebase/authServices/updateProfileService';
 import { setUser } from "../../../features/auth/authSlice";
@@ -227,7 +226,7 @@ function ProfilePopup({isOpen}) {
                               <Button type="submit" variant='primary' className='py-2 text-sm' isLoading={isSubmitting}>
                                   {isSubmitting ? 'Saving...' : 'Save'}
                               </Button>
-                              <Button type="button" variant='danger' className='py-2 text-sm' onClick={()=>{setIsEditing(false)}}>
+                              <Button type="button" variant='secondaryOutline' className='py-2 text-sm' onClick={()=>{setIsEditing(false)}}>
                                   Cancel
                               </Button>
                           </div>  

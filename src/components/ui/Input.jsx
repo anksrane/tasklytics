@@ -16,7 +16,7 @@ const Input = React.forwardRef(function Input({
   const id = useId();
   const inputClass = `rounded-md text-text outline-none focus:shadow-md focus:border-primary hover:border-primary-hover 
   ${error ? 'border border-danger' : 'border border-border'} duration-200 w-full 
-  ${disabled ? 'bg-disabled text-text-muted cursor-not-allowed' : ''} ${className}`;
+  ${disabled ? 'bg-disabled text-text-muted cursor-not-allowed hover:border-border' : ''} ${className}`;
 
   return (
     <div className="w-full h-fit">

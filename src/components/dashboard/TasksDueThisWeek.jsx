@@ -43,7 +43,7 @@ export default function TasksDueThisWeek({
   return (
     <>
       {/* Table wrapper */}
-      <div className={`relative rounded-lg border overflow-auto max-h-60 ${styles.scrollbar}`}>
+      <div className={`relative rounded-md border overflow-auto max-h-60 ${styles.scrollbar}`}>
         <table className="min-w-full text-sm text-left rtl:text-right text-text">
           <thead className="sticky top-0 bg-primary text-xs text-text uppercase z-10">
             <tr>

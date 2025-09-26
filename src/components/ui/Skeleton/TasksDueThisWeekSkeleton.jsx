@@ -8,7 +8,7 @@ function TasksDueThisWeekSkeleton({ rows = 4, columns = 3 }) {
       <Skeleton className="h-6 w-40 mb-4" />
 
       {/* Table Wrapper */}
-      <div className="relative rounded-lg border overflow-y-auto max-h-60">
+      <div className="relative rounded-md border overflow-y-auto max-h-60">
         <table className="w-full text-sm text-left text-gray-500">
           <thead className="sticky top-0 bg-gray-700 text-xs text-gray-100 uppercase z-10">
             <tr>

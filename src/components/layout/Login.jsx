@@ -38,7 +38,7 @@ function Login() {
     return (
         <div className='relative flex items-center justify-center h-screen w-screen overflow-hidden p-1 md:p-0'>
 
-            <div className="relative z-30 w-full max-w-4xl md:shadow-md rounded-md border border-secondary flex">
+            <div className="relative z-30 md:w-full max-w-4xl md:shadow-md rounded-md border border-secondary flex">
                 <div className='hidden md:block md:w-1/2'>
                     <img src={img} alt="Banne Image" className='rounded-tl-md rounded-bl-md' />
                 </div>

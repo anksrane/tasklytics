@@ -422,7 +422,7 @@ function AddTask({onClose, singleTask, editingMode, onTaskAdded, taskPhasesOptio
                     <Button type="submit" variant='primary' className='text-sm' isLoading={isSubmitting}>
                       {isSubmitting ? 'Submitting...' : editingMode ? 'Update Task' : 'Create Task'}
                     </Button>
-                    <Button type="reset" variant='danger' className='py-2 text-sm' onClick={()=>reset()}>Reset</Button>
+                    <Button type="reset" variant='secondaryOutline' className='py-2 text-sm' onClick={()=>reset()}>Reset</Button>
                 </div>
               </form>   
             </div>         

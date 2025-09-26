@@ -185,7 +185,7 @@ function Deleted() {
                   break;
               }
                   return (
-                      <span className={`px-2 py-1 rounded-lg text-xs font-semibold ${priorityClass}`}>
+                      <span className={`px-2 py-1 rounded-md text-xs font-semibold ${priorityClass}`}>
                       {priority}
                       </span>
                   );

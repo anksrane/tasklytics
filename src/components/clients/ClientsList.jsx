@@ -184,7 +184,7 @@ function ClientsList() {
         </div>          
       ):(      
         <div>    
-          <div className="overflow-x-auto rounded-md">
+          <div className="overflow-x-auto rounded-md shadow-md">
             <table className="min-w-full border rounded-md shadow-sm text-text">
               <thead className="bg-primary text-text">
                 {table.getHeaderGroups().map(headerGroup => (

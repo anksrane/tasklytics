@@ -103,6 +103,8 @@ function AddEditClient({ onClose, onClientAdded, clientData, editingMode }) {
             <Input
               label="Client Name"
               placeholder="Enter Client Name"
+              className="py-1 px-2 text-sm"
+              labelClass='font-semibold mt-2'
               {...register("clientName", { required: "Client name is required" })}
               onChange={(e) => handleClientNameChange(e.target.value)}
               value={watch("clientName") ?? ""}
@@ -113,9 +115,10 @@ function AddEditClient({ onClose, onClientAdded, clientData, editingMode }) {
             <Input
               label="Slug"
               placeholder="Auto-generated Client Name"
+              className="py-1 px-2 text-sm"
+              labelClass='font-semibold mt-2'              
               {...register("clientNameSlug")}
               disabled
-              className='text-gray-500'
             />
 
             {/* Buttons */}
@@ -123,7 +126,7 @@ function AddEditClient({ onClose, onClientAdded, clientData, editingMode }) {
               <Button type="submit" variant='primary' className='py-2 text-sm' isLoading={isSubmitting}>
                 {isSubmitting ? 'Saving...' : 'Save'}
               </Button>
-              <Button type="button" variant='danger' className='py-2 text-sm' onClick={onClose}>
+              <Button type="button" variant='secondaryOutline' className='py-2 text-sm' onClick={onClose}>
                 Cancel
               </Button>
             </div>

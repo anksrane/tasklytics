@@ -200,7 +200,7 @@ function PrioritiesList() {
         </div>          
       ):(  
         <div>
-          <div className="overflow-x-auto rounded-md">
+          <div className="overflow-x-auto rounded-md shadow-md">
             <table className="min-w-full border rounded-md shadow-sm text-text">
               <thead className="bg-primary text-text">
                 {table.getHeaderGroups().map(headerGroup => (
@@ -272,7 +272,7 @@ function PrioritiesList() {
                     key={pageNumber}
                     onClick={() => {
                       setCurrentPage(pageNumber);
-                      fetchPhases(pageNumber);
+                      fetchPriorities(pageNumber);
                     }}
                     className={`px-3 py-1 border border-primary rounded-md text-sm ${currentPage === pageNumber ? 'bg-primary text-text font-extrabold' : 'bg-white text-primary hover:bg-primary hover:text-text-secondary font-medium'}`}
                   >

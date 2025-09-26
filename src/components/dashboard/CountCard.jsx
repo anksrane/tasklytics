@@ -2,7 +2,7 @@ import React from 'react'
 
 function CountCard({title,count='0',icon, onClick}) {
   return (
-    <div className='rounded-lg px-4 py-4 bg-background-surface shadow-md' onClick={onClick}>
+    <div className='rounded-md px-4 py-4 bg-background-surface shadow-md' onClick={onClick}>
         <div className="flex items-center justify-center">  
           <div className='flex gap-4 items-center justify-center sm:w-auto min-w-[210px]'>
             {icon}

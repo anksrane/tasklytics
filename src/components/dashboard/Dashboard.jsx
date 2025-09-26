@@ -250,7 +250,7 @@ function Dashboard() {
         <div className="mx-auto p-4 z-10">
             <h2 className="text-2xl font-bold mb-4 text-center text-text-secondary">Dashboard</h2>
             {/* Task Count Section */}
-            <div className='grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 lg:gap-4 gap-2 rounded-lg'>
+            <div className='grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 lg:gap-4 gap-2 rounded-md'>
                 <CountCard title="Completed Tasks" 
                     count={counts.completed} 
                     icon={<FaCheck className="text-success text-3xl" />}
@@ -269,9 +269,9 @@ function Dashboard() {
                   />
             </div>
 
-            <div className='lg:my-4 my-2 rounded-lg flex lg:flex-row flex-col lg:gap-4 gap-2'>
+            <div className='lg:my-4 my-2 rounded-md flex lg:flex-row flex-col lg:gap-4 gap-2'>
                 {/* BarChart Dropdown */}
-                <div className="bg-background-surface shadow-md p-4 rounded-lg lg:w-1/2 w-full">
+                <div className="bg-background-surface shadow-md p-4 rounded-md lg:w-1/2 w-full">
                     <div className="flex gap-2 align-center justify-between">
                         <h3 className="text-lg font-semibold mb-4 text-text-secondary">{chartTitle}</h3>
                         <Select 
@@ -294,13 +294,13 @@ function Dashboard() {
                     <StackedBarChart data={barChartData} masterData={masterData} />
                     ) : (
                     <div className="text-center text-primary py-6 max-h-60">
-                        No data available
+                        No Tasks Available
                     </div>
                     )}              
                 </div>    
 
                 {/* Tasks By Team */}
-                <div className="bg-background-surface shadow-md  p-4 rounded-lg lg:w-1/2 w-full">
+                <div className="bg-background-surface shadow-md  p-4 rounded-md lg:w-1/2 w-full">
                     <div className="flex gap-2 align-center justify-between">
                         <h3 className="text-lg font-semibold mb-4 text-text-secondary">
                             {user.userRole === "Admin"
@@ -328,17 +328,17 @@ function Dashboard() {
                         <PieChart pieData={pieDataForChart} is3D={false} height={300} />
                         ) : (
                             <div className="text-center text-primary font-bold py-6 max-h-60">
-                                No data available
+                                No Tasks Available
                             </div>                           
                         )
                     }
                 </div>
             </div>
 
-            <div className='lg:my-4 my-2 rounded-lg flex lg:flex-row flex-col lg:gap-4 gap-2'>
+            <div className='lg:my-4 my-2 rounded-md flex lg:flex-row flex-col lg:gap-4 gap-2'>
                 
                 {/* Task Due By This Week */}
-                <div className="bg-background-surface shadow-md  p-4 rounded-lg lg:w-1/2 w-full">
+                <div className="bg-background-surface shadow-md  p-4 rounded-md lg:w-1/2 w-full">
                     <div className="flex gap-2 align-center justify-between">
                         <h3 className="text-lg font-semibold mb-4 text-text-secondary">Tasks Due This Week</h3>
                     </div>                
@@ -347,14 +347,14 @@ function Dashboard() {
                         : tasksDueThisWeek && tasksDueThisWeek.length>0 ? (<TasksDueThisWeek tasks={tasksDueThisWeek} />)
                         : (
                             <div className="text-center text-primary py-6 max-h-60">
-                                No data available
+                                No Upcoming Deadlines This Week.
                             </div>                            
                         )
                     }
                 </div>      
 
                 {/* Task Overdue */}
-                <div className="bg-background-surface shadow-md  p-4 rounded-lg lg:w-1/2 w-full">
+                <div className="bg-background-surface shadow-md p-4 rounded-md lg:w-1/2 w-full">
                     <div className="flex gap-2 align-center justify-between">
                         <h3 className="text-lg font-semibold mb-4 text-text-secondary">Tasks Overdue</h3>
                     </div>                
@@ -363,7 +363,7 @@ function Dashboard() {
                         : tasksOverdue && tasksOverdue.length>0 ? (<TasksDueThisWeek tasks={tasksOverdue} />)
                         : (
                             <div className="text-center text-primary py-6 max-h-60">
-                                No data available
+                                All tasks are up to date.
                             </div>                            
                         )
                     }

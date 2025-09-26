@@ -31,6 +31,12 @@ export default {
           surface: 'var(--surface)',
           overlay: 'var(--overlay)',
         },
+        header:{
+          DEFAULT: 'var(--header)',
+        },
+        sidebar: {
+          DEFAULT: 'var(--sidebar)',
+        },
         primary: {
           DEFAULT: 'var(--primary)',
           hover: 'var(--primary-hover)',
@@ -54,6 +60,7 @@ export default {
         border: {
           DEFAULT: 'var(--border)',
           light: 'var(--border-light)',
+          borderBg: 'var(--border-dark)',
         },
         danger: {
           DEFAULT: 'var(--danger)',

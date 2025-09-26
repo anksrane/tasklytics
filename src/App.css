@@ -4,6 +4,9 @@
   --background: #F9FAFB;        /* near white */
   --surface: #FFFFFF;           /* cards, panels */
   --overlay: #F3F4F6;           /* popup background */
+
+  --header: #26abf8;  
+  --sidebar: #112938;   
   
   --primary: #FF6F61;           /* Coral */
   --primary-hover: #E85A4F;
@@ -22,6 +25,7 @@
 
   --border: #D1D5DB;            /* neutral border */
   --border-light: #E5E7EB;
+  --border-dark:  #001927;  
   
   /* Semantic colors */
   --danger: #DC2626;            /* red for errors / alerts */
@@ -35,17 +39,15 @@
   /* Base / Dark Theme */
   --background: #001927;        
   --surface: #112938;           
-  --overlay: #1b4a64;           
-  
-  /* --primary: #FF6F61;           
-  --primary-hover: #E85A4F;
-  --secondary: #FF9800;         
-  --secondary-hover: #FB8C00; */
+  --overlay: #003653;  
+
+  --header: #001927;  
+  --sidebar: #001927;        
 
   --primary: #14B8A6; 
   --primary-hover: #0D9488;
-  --secondary: #F59E0B;        
-  --secondary-hover: #D97706;
+  --secondary: #cc8101;        
+  --secondary-hover: #cc8101;
   
   --text: #001927;              
   --text-secondary: #E0E6ED;    
@@ -57,8 +59,9 @@
   --table-medium:#bdbdbd;
   --table-light:#d8d8d8;
   
-  --border: #2C3E50;            
-  --border-light: #2C3A4A;      
+  --border: #112938;            
+  --border-light: #2C3A4A;    
+  --border-dark:  #001927;
   
   /* Semantic colors */
   --danger: #ff0000;            

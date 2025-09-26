@@ -33,7 +33,7 @@ function Sidebar({isOpen}) {
     );    
 
     return (
-      <aside className={`h-screen bg-background border-r shadow-md p-2 flex flex-col justify-between duration-500 ${isOpen? 'fixed top-0 z-50 left-0 w-full md:static md:w-64' : 'hidden md:flex md:w-20'}`}>
+      <aside className={`h-screen bg-sidebar border-r shadow-md p-2 flex flex-col justify-between duration-500 ${isOpen? 'fixed top-0 z-50 left-0 w-full md:static md:w-64' : 'hidden md:flex md:w-20'}`}>
         <div>
           <div className='md:block flex justify-between items-center'>
             <div className='md:hidden block'></div>
@@ -55,7 +55,7 @@ function Sidebar({isOpen}) {
                   to={item.path}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-4 py-2 rounded-md font-medium transition 
-                    ${isActive ? 'bg-primary text-text' : 'text-text-secondary hover:hover:bg-background-overlay hover:text-text-secondary duration-300'}`
+                    ${isActive ? 'bg-primary text-text' : 'text-text-secondary hover:hover:bg-primary hover:text-text duration-200'}`
                   }
                   onClick={() => dispatch(setIsSidebarOpen(false))}
                 >

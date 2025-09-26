@@ -188,7 +188,7 @@ function Tasks() {
                   break;
               }
                   return (
-                      <span className={`px-2 py-1 rounded-lg text-xs font-semibold ${priorityClass}`}>
+                      <span className={`px-2 py-1 rounded-md text-xs font-semibold ${priorityClass}`}>
                       {priority}
                       </span>
                   );
@@ -382,7 +382,7 @@ function Tasks() {
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                   ))}
                 </select>
-                <button className='bg-danger hover:bg-danger p-1 rounded-e text-white'
+                <button className='bg-danger hover:bg-danger p-1 rounded-tr-md rounded-br-md text-white'
                   onClick={() => setFilters(prev => ({ ...prev, [filterKey]: '' }))}><MdOutlineClear/></button>
               </div>
             ))}
@@ -415,7 +415,7 @@ function Tasks() {
         ) :
         (
         <div>
-          <div className="overflow-x-auto rounded-md">
+          <div className="overflow-x-auto rounded-md shadow-md">
             <table className="min-w-full border rounded-md shadow-sm text-text">
               {/* Table Header (<thead>) */}
               <thead className="bg-primary text-text">
